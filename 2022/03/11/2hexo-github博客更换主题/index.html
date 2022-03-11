@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>hexo+github博客更换主题 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="hexo+github博客的美化及更换博客的主题1.在hexo主题页挑选喜欢的主题
+https://hexo.io/themes/
+2.挑选到喜欢的主题后，点击主题下面的名称进入github仓库
+
+,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="hexo+github博客更换主题 - Hexo"/>
+    <meta name="twitter:description" content="hexo+github博客的美化及更换博客的主题1.在hexo主题页挑选喜欢的主题
+https://hexo.io/themes/
+2.挑选到喜欢的主题后，点击主题下面的名称进入github仓库
+
+,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="hexo+github博客更换主题 - Hexo"/>
+    <meta property="og:description" content="hexo+github博客的美化及更换博客的主题1.在hexo主题页挑选喜欢的主题
+https://hexo.io/themes/
+2.挑选到喜欢的主题后，点击主题下面的名称进入github仓库
+
+,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">hexo+github博客更换主题</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">hexo+github博客更换主题</h1>
+        <div class="stuff">
+            <span>三月 11, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="hexo-github博客的美化及更换博客的主题"><a href="#hexo-github博客的美化及更换博客的主题" class="headerlink" title="hexo+github博客的美化及更换博客的主题"></a>hexo+github博客的美化及更换博客的主题</h1><p>1.在hexo主题页挑选喜欢的主题</p>
+<p><a target="_blank" rel="noopener" href="https://hexo.io/themes/">https://hexo.io/themes/</a></p>
+<p>2.挑选到喜欢的主题后，点击主题下面的名称进入github仓库</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311161454.png" alt="20220311161454"></p>
+<p>3.点击code复制仓库地址<a target="_blank" rel="noopener" href="https://github.com/Fechin/hexo-theme-diaspora.git">https://github.com/Fechin/hexo-theme-diaspora.git</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311161527.png" alt="20220311161527"></p>
+<p>4.打开Hexo文件夹下的themes目录(f:\Blog\themes)，右键Git Bash Here,输入下载命令</p>
+<pre><code>git clone https://github.com/Fechin/hexo-theme-diaspora.git           #（刚才复制的仓库地址）
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311161750.png" alt="20220311161750"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311161802.png" alt="20220311161802"></p>
+<p>5.打开Hexo文件夹下的网站配置文件_config.yml</p>
+<p>注意：blog目录中的config.yml为网站配置文件，themes里面的config.yml为主题配置文件</p>
+<p>修改参数为</p>
+<pre><code>theme：hexo-theme-diaspora
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311162302.png" alt="20220311162302"></p>
+<p>6.在blog目录中，右键Git Bash Here输入</p>
+<pre><code>hexo g
+
+hexo s
+</code></pre>
+<p>打开浏览器，输入<a target="_blank" rel="noopener" href="http://localhost:4000/%E6%88%96%E8%80%85http://ip:4000/%E6%9F%A5%E7%9C%8B%E6%95%88%E6%9E%9C">http://localhost:4000/或者http://ip:4000/查看效果</a></p>
+<p>7.满意的话部署到服务器</p>
+<p>打开文件夹blog，右键Git Bash Here，输入</p>
+<pre><code>hexo clean（必须要做这一步，否则有时因缓存问题，服务器更新不了主题）
+
+hexo g 
+
+hero d
+</code></pre>
+<p>8.修改主题</p>
+<p>在themes中主题配置文件config.yml中按照需求修改，注意用txt打开可能出错，下载一个vs code</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

