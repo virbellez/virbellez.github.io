@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="在windows部署Hexo+GitHubPages搭建个人博客网站
+系统windows10 64专业版
+参考链接https://zhuanlan.zhihu.com/p/26625249
+1.在g,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content=" - Hexo"/>
+    <meta name="twitter:description" content="在windows部署Hexo+GitHubPages搭建个人博客网站
+系统windows10 64专业版
+参考链接https://zhuanlan.zhihu.com/p/26625249
+1.在g,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content=" - Hexo"/>
+    <meta property="og:description" content="在windows部署Hexo+GitHubPages搭建个人博客网站
+系统windows10 64专业版
+参考链接https://zhuanlan.zhihu.com/p/26625249
+1.在g,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle"></h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title"></h1>
+        <div class="stuff">
+            <span>三月 11, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>在windows部署Hexo+GitHubPages搭建个人博客网站</p>
+<p>系统windows10 64专业版</p>
+<p>参考链接<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26625249">https://zhuanlan.zhihu.com/p/26625249</a></p>
+<p>1.在git和node.js官网下载安装包</p>
+<p><a target="_blank" rel="noopener" href="https://git-scm.com/">https://git-scm.com/</a></p>
+<p><a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn/">https://nodejs.org/zh-cn/</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131405.png" alt="20220310131405"></p>
+<p>2.击安装。一路next，可以自己选择安装路径</p>
+<p>3.版本检查</p>
+<pre><code>node -v
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131454.png" alt="20220310131454"></p>
+<pre><code>git --version
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131506.png" alt="20220310131506"></p>
+<p>4.Git与GitHub帐号绑定</p>
+<p>到git安装文件夹，用鼠标右击以管理员方式打开Git Bash.exe</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131600.png" alt="20220310131600"></p>
+<p>5.设置user.name和user.email配置信息：</p>
+<pre><code>git config --global user.name &quot;GitHub用户名&quot;
+
+git config --global user.email &quot;GitHub注册邮箱&quot;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131631.png" alt="20220310131631"></p>
+<p>6.生成ssh密钥文件：</p>
+<pre><code>ssh-keygen -t rsa -C &quot;GitHub注册邮箱&quot;
+</code></pre>
+<p>直接三个回车</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131719.png" alt="20220310131719"></p>
+<p>7.找到默认文件夹中生成的.ssh的文件夹中的id_rsa.pub密钥打开，将内容全部复制</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131749.png" alt="20220310131749"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310131922.png" alt="20220310131922"></p>
+<p>8.打开github-setting-ssh and gpg keys，添加sshkeys</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310132018.png" alt="20220310132018"></p>
+<p>9.在Git Bash中检测GitHub公钥设置是否成功，输入 ssh <a href="mailto:&#x67;&#x69;&#x74;&#64;&#x67;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;">&#x67;&#x69;&#x74;&#64;&#x67;&#x69;&#116;&#x68;&#117;&#x62;&#46;&#99;&#x6f;&#x6d;</a></p>
+<pre><code>ssh git@github.com
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310132341.png" alt="20220310132341"></p>
+<p>10.Node.js会包含环境变量及npm的安装，检测检测npm是否安装成功，在命令行中输入版本检查命令</p>
+<pre><code>npm -v
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310132514.png" alt="20220310132514"></p>
+<p>到这了，安装Hexo的环境已经全部搭建完成</p>
+<p>11.在电脑里创建一个文件夹，命名为blog 我新建文件夹，我在F新建了blog文件夹</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310132640.png" alt="20220310132640"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310133353.png" alt="20220310133353"></p>
+<p>12.在blog文件夹中使用npm命令安装Hexo，注意这里要在blog文件夹中，按住shift，鼠标右键，选择在此处打开powershell</p>
+<pre><code>npm install -g hexo-cli
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311152424.png" alt="20220311152424"></p>
+<p>13.在blog文件夹中初始化博客</p>
+<pre><code>hexo init
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310133633.png" alt="20220310133633"></p>
+<p>14.检测我的网站雏形，分别按顺序输入以下三条命令</p>
+<pre><code>hexo new hello fantasy
+
+hexo g
+
+hexo s
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310133806.png" alt="20220310133806"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310133836.png" alt="20220310133836"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310134030.png" alt="20220310134030"></p>
+<p>15.在本地部署hexo完毕后，在本机用<a target="_blank" rel="noopener" href="http://localhost:4000/%E5%8F%AF%E4%BB%A5%E6%AD%A3%E5%B8%B8%E6%89%93%E5%BC%80%E7%BD%91%E9%A1%B5">http://localhost:4000/可以正常打开网页</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220310134100.png" alt="20220310134100"></p>
+<p>16.在blog根目录里的_config.yml文件称为站点配置文件</p>
+<p>更改config站点配置文件</p>
+<p>打开站点的配置文件_config.yml，翻到最后修改为</p>
+<pre><code>deploy:
+
+type: git
+
+repo: https://github.com/virbellez/virbellez.github.io.git #（这里填入你之前在GitHub上创建仓库的完整路径，记得加上 .git）（或者git@github.com:virbellez/github.io.git）
+
+branch: master
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311150242.png" alt="20220311150242"></p>
+<p>如果18步骤出现错误err: Error: Spawn failed<br>则是站点配置文件repo后面的仓库http模式更换为SSH模式就好了，改为<a href="mailto:&#x67;&#105;&#x74;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#x74;&#64;&#x67;&#x69;&#116;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#x6d;</a>:virbellez&#x2F;github.io.git</p>
+<p>17.安装git部署插件要安装在blog文件夹中</p>
+<pre><code>npm install hexo-deployer-git --save
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311154121.png" alt="20220311154121"></p>
+<p>安错文件夹后会报错：Deployer not found: git</p>
+<p>18.安装完后在blog文件夹中输入三条命令</p>
+<pre><code>hexo clean
+
+hexo g
+
+hexo d
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132605.png" alt="20220311132605"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132621.png" alt="20220311132621"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132636.png" alt="20220311132636"></p>
+<p>安装完后跳出弹窗</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132706.png" alt="20220311132706"></p>
+<p>打开弹窗里面的链接输入弹窗中密码</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311133000.png" alt="20220311133000"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132748.png" alt="20220311132748"></p>
+<p>点右边授权按钮</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311132924.png" alt="20220311132924"></p>
+<p>其实第三条的 hexo d 就是部署网站命令，d是deploy的缩写。完成后，打开浏览器，在地址栏输入你的放置个人网站的仓库路径，即 <a target="_blank" rel="noopener" href="http://xxxx.github.io,/">http://xxxx.github.io，</a> 比如我的xxxx就是我的GitHub用户名：virbellez</p>
+<p>备注：</p>
+<p>如果是已有博客迁移到新电脑，需要在github-setting-ssh keys那里删掉旧的密码，将git生成的新密码填进去</p>
+<p>将之前githun上面的文件clon下来，存在旁边，等hexo上线后，将旧的文件替换进，.deploy_git文件夹中</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220311135253.png" alt="20220311135253"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="http://link.hhtjim.com/163/425570952.mp3"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
