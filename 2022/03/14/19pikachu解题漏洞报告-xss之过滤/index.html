@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-xss之过滤 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="xss之过滤解题过程打开靶场
+先随便输入一条信息，看看正常显示的样子
+
+输入一条弹窗命令
+&amp;lt;script&amp;gt;alert(156)&amp;lt;/script&amp;gt;
+
+
+script标签被去掉了,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-xss之过滤 - Hexo"/>
+    <meta name="twitter:description" content="xss之过滤解题过程打开靶场
+先随便输入一条信息，看看正常显示的样子
+
+输入一条弹窗命令
+&amp;lt;script&amp;gt;alert(156)&amp;lt;/script&amp;gt;
+
+
+script标签被去掉了,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-xss之过滤 - Hexo"/>
+    <meta property="og:description" content="xss之过滤解题过程打开靶场
+先随便输入一条信息，看看正常显示的样子
+
+输入一条弹窗命令
+&amp;lt;script&amp;gt;alert(156)&amp;lt;/script&amp;gt;
+
+
+script标签被去掉了,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-xss之过滤</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-xss之过滤</h1>
+        <div class="stuff">
+            <span>三月 14, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="xss之过滤"><a href="#xss之过滤" class="headerlink" title="xss之过滤"></a>xss之过滤</h1><h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><p>打开靶场</p>
+<p>先随便输入一条信息，看看正常显示的样子</p>
+<p><img src="https://s2.loli.net/2022/01/17/m9AEMPrYinuzaSt.png" alt="1642405397(1)"></p>
+<p>输入一条弹窗命令</p>
+<pre><code>&lt;script&gt;alert(156)&lt;/script&gt;
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/17/jmfnC4JqaHsicY9.png" alt="20220117151521"></p>
+<p>script标签被去掉了</p>
+<p><img src="https://s2.loli.net/2022/01/17/L1dA7Ip9QOvEo8T.png" alt="20220117151546"></p>
+<p>代码中搜索都没有出现输入的内容</p>
+<p><img src="https://s2.loli.net/2022/01/17/vM7oudF9nt5Pmes.png" alt="20220117151712"></p>
+<p><img src="https://s2.loli.net/2022/01/17/gfNGB6Ky4Jqvcn1.png" alt="20220117151947"></p>
+<p>说明被过滤掉了</p>
+<p>试一下换成大小写混合的代码</p>
+<pre><code>&lt;ScRiPT&gt;alert(156)&lt;/SCrIpt&gt;
+</code></pre>
+<p><img src="https://s2.loli.net/2022/01/17/f1WsTnaertm2RdO.png" alt="20220117175417"></p>
+<p>成功出现弹窗</p>
+<p><img src="https://s2.loli.net/2022/01/17/SXn9q48gYHi7QGI.png" alt="20220117175646"></p>
+<p>这里是后台用正则表达式进行了过滤，但是只匹配了小写，所以混合大小写可以绕过。</p>
+<h2 id="如果是前端过滤如何绕过？"><a href="#如果是前端过滤如何绕过？" class="headerlink" title="如果是前端过滤如何绕过？"></a>如果是前端过滤如何绕过？</h2><p>1.直接抓包重放</p>
+<p>2.修改html前端代码。比如反射型XSS(get)中限制输入20个字符。</p>
+<h2 id="常见的弱过滤及绕过"><a href="#常见的弱过滤及绕过" class="headerlink" title="常见的弱过滤及绕过"></a>常见的弱过滤及绕过</h2><p>前端限制绕过，直接抓包重放，或者修改html前端代码。比如反射型XSS(get)中限制输入20个字符。</p>
+<p>大小写，比如<SCRIPT>aLeRT(111)</sCRIpt>。后台可能用正则表达式匹配，如果正则里面只匹配小写，那就可能被绕过。</p>
+<p>双写（拼凑），&lt;scri<script>pt>alert(111)</scri</script>pt&gt;。后台可能把<script>标签去掉换，但可能只去掉一次。</p>
+<p>注释干扰，<scri<!--test-->pt>alert(111)</sc<!--test-->ript>。加上注释后可能可以绕过后台过滤机制。</p>
+<h2 id="绕过过滤核心思路："><a href="#绕过过滤核心思路：" class="headerlink" title="绕过过滤核心思路："></a>绕过过滤核心思路：</h2><p>后台过滤了特殊字符，比如<script>标签，但该标签可以被各种编码，后台不一定过滤</p>
+<p>当浏览器对该编码进行识别时，会翻译成正常的标签，从而执行</p>
+<p>编码应该在输出点被正常识别和翻译，不能随便使用编码。</p>
+<p>应使用html编码</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#xss%E4%B9%8B%E8%BF%87%E6%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">xss之过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">解题过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E6%98%AF%E5%89%8D%E7%AB%AF%E8%BF%87%E6%BB%A4%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">如果是前端过滤如何绕过？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%BC%B1%E8%BF%87%E6%BB%A4%E5%8F%8A%E7%BB%95%E8%BF%87"><span class="toc-number">1.3.</span> <span class="toc-text">常见的弱过滤及绕过</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

