@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SQL-Inject数字型注入(post) - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="SQL-Inject数字型注入(post)SQL介绍SQL（数据库）注入漏洞主要形成的原因是在数据交互中，前端的数据传入到后台处理时，没有做严格的判断，导致其传入的“数据”拼接到SQL语句中后，被当,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SQL-Inject数字型注入(post) - Hexo"/>
+    <meta name="twitter:description" content="SQL-Inject数字型注入(post)SQL介绍SQL（数据库）注入漏洞主要形成的原因是在数据交互中，前端的数据传入到后台处理时，没有做严格的判断，导致其传入的“数据”拼接到SQL语句中后，被当,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SQL-Inject数字型注入(post) - Hexo"/>
+    <meta property="og:description" content="SQL-Inject数字型注入(post)SQL介绍SQL（数据库）注入漏洞主要形成的原因是在数据交互中，前端的数据传入到后台处理时，没有做严格的判断，导致其传入的“数据”拼接到SQL语句中后，被当,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SQL-Inject数字型注入(post)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SQL-Inject数字型注入(post)</h1>
+        <div class="stuff">
+            <span>三月 16, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="SQL-Inject数字型注入-post"><a href="#SQL-Inject数字型注入-post" class="headerlink" title="SQL-Inject数字型注入(post)"></a>SQL-Inject数字型注入(post)</h1><h2 id="SQL介绍"><a href="#SQL介绍" class="headerlink" title="SQL介绍"></a>SQL介绍</h2><p>SQL（数据库）注入漏洞主要形成的原因是在数据交互中，前端的数据传入到后台处理时，没有做严格的判断，导致其传入的“数据”拼接到SQL语句中后，被当作SQL语句的一部分执行。 从而导致数据库受损（被脱裤、被删除、甚至整个服务器权限沦陷）。</p>
+<p>在构建代码时，一般会从如下几个方面的策略来防止SQL注入漏洞：</p>
+<p>1.对传进SQL语句里面的变量进行过滤，不允许危险字符传入；</p>
+<p>2.使用参数化（Parameterized Query 或 Parameterized Statement）；</p>
+<p>3.还有就是,目前有很多ORM框架会自动使用参数化解决注入问题,但其也提供了”拼接”的方式,所以使用时需要慎重! </p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/witwitwiter/article/details/115702331">https://blog.csdn.net/witwitwiter/article/details/115702331</a></p>
+<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><p>1.在下拉列表中随机选取序号，选择序号1</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316104626.png" alt="20220316104626"></p>
+<p>2.返回查询结果</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316104650.png" alt="20220316104650"></p>
+<p>3.再随机选个序号2，打开burp进行拦截</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316104817.png" alt="20220316104817"></p>
+<p>4.查看拦截的结果，看到id&#x3D;2,这里是注入点</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316104911.png" alt="20220316104911"></p>
+<p>5.可以看到第2步返回的查询数据包括两个内容，一个名字和一个邮箱，猜测查询命令可以查询到两个字段</p>
+<p>6.在注入点用order by语句，验证有几个字段。order by 2意思是用第二列进行排序</p>
+<pre><code>order by 2
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316105615.png" alt="20220316105615"></p>
+<p>7.点放包，返回内容和刚才一致</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316110929.png" alt="20220316110929"></p>
+<p>8.再修改为order by 3，意思是用第三列进行排序</p>
+<p> order by 3</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316111158.png" alt="20220316111158"></p>
+<p>9.返回报错，说明第三个列不存在，查询语句只用了两个列名</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316111108.png" alt="20220316111108"></p>
+<p>10.我们猜测这里使用的SQL（数据库）语句是 select 人名 邮箱 from 用户表 where id&#x3D;</p>
+<p>11.试试将用户表中所有用户信息查询出来，在后面加上 or 1&#x3D;1使判断条件始终为真</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316112834.png" alt="20220316112834"></p>
+<p>12.返回了所有用户名及对应的邮箱</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316112742.png" alt="20220316112742"></p>
+<p>13.进一步利用联合查询语句爆破当前数据库名和用户名</p>
+<pre><code>union select database(),user()
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316114205.png" alt="20220316114205"></p>
+<p>14.根据返回的内容，得到数据库为pikachu用户名为root</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316113942.png" alt="20220316113942"></p>
+<p>15.利用得到的数据库名称进一步构造payload，来查询数据库中的表名</p>
+<pre><code>union select TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = ‘pikachu’ 
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316121740.png" alt="20220316121740"></p>
+<p>16.返回查询结果，可以看到其中有users的表</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316124957.png" alt="20220316124957"></p>
+<p>17.继续利用之前查到的数据库名pikachu和表名users，构建payload,查询表中的列名</p>
+<pre><code>union select TABLE_NAME,COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = ‘pikachu’ and TABLE_NAME = ‘users’
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316125414.png" alt="20220316125414"></p>
+<p>18.返回结果，得到列名</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316125624.png" alt="20220316125624"></p>
+<p>19.由于联合查询要求前后两个SQL语句的列名数要一致，所以这里只能用两个列名进行查询。用下列语句查询users表中的用户名和密码字段。</p>
+<pre><code>union select username,password from users
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316130120.png" alt="20220316130120"></p>
+<p>20.返回结果</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316130236.png" alt="20220316130236"></p>
+<p>21.整理得到用户名和对应的密码</p>
+<p>用户名admin<br>密码e10adc3949ba59abbe56e057f20f883e</p>
+<p>用户名pikachu<br>密码670b14728ad9902aecba32e22fa4f6bd</p>
+<p>用户名test<br>密码e99a18c428cb38d5f260853678922e03</p>
+<p>22.使用kali自带工具hash-identifier判断pikachu用户的密码的哈希类型</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316131339.png" alt="20220316131339"></p>
+<p>23.得到类型为MD5，在MD5解密网站解密</p>
+<p><a target="_blank" rel="noopener" href="https://www.cmd5.com/">https://www.cmd5.com/</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220316131815.png" alt="20220316131815"></p>
+<p>24.得到密码000000</p>
+<p>其他的同理，但是因为pikachu是root用户，拿到他的价值是最大的，其他的就可以忽略了</p>
+<h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><p>SQL汇总</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/gududeajun/article/details/121879603">https://blog.csdn.net/gududeajun/article/details/121879603</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Inject%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5-post"><span class="toc-number">1.</span> <span class="toc-text">SQL-Inject数字型注入(post)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">SQL介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85"><span class="toc-number">1.4.</span> <span class="toc-text">知识补充</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

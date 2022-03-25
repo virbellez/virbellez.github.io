@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-RCE exec-ping - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="RCE exec-pingRCE(remote command&amp;#x2F;code execute)远程命令&amp;#x2F;代码执行概述RCE漏洞，可以让攻击者直接向后台服务器远程注入操作系统命令或者代,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-RCE exec-ping - Hexo"/>
+    <meta name="twitter:description" content="RCE exec-pingRCE(remote command&amp;#x2F;code execute)远程命令&amp;#x2F;代码执行概述RCE漏洞，可以让攻击者直接向后台服务器远程注入操作系统命令或者代,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-RCE exec-ping - Hexo"/>
+    <meta property="og:description" content="RCE exec-pingRCE(remote command&amp;#x2F;code execute)远程命令&amp;#x2F;代码执行概述RCE漏洞，可以让攻击者直接向后台服务器远程注入操作系统命令或者代,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-RCE exec-ping</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-RCE exec-ping</h1>
+        <div class="stuff">
+            <span>三月 23, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="RCE-exec-ping"><a href="#RCE-exec-ping" class="headerlink" title="RCE exec-ping"></a>RCE exec-ping</h1><h2 id="RCE-remote-command-x2F-code-execute-远程命令-x2F-代码执行概述"><a href="#RCE-remote-command-x2F-code-execute-远程命令-x2F-代码执行概述" class="headerlink" title="RCE(remote command&#x2F;code execute)远程命令&#x2F;代码执行概述"></a>RCE(remote command&#x2F;code execute)远程命令&#x2F;代码执行概述</h2><pre><code>RCE漏洞，可以让攻击者直接向后台服务器远程注入操作系统命令或者代码，从而控制后台系统。 
+
+远程系统命令执行
+
+一般出现这种漏洞，是因为应用系统从设计上需要给用户提供指定的远程命令操作的接口。比如我们常见的路由器、防火墙、入侵检测等设备的web管理界面上，一般会给用户提供一个ping操作的web界面，用户从web界面输入目标IP，提交后，后台会对该IP地址进行一次ping测试，并返回测试结果。 而，如果，设计者在完成该功能时，没有做严格的安全控制，则可能会导致攻击者通过该接口提交“意想不到”的命令，从而让后台进行执行，从而控制整个后台服务器。
+
+现在很多的甲方企业都开始实施自动化运维,大量的系统操作会通过&quot;自动化运维平台&quot;进行操作。 在这种平台上往往会出现远程系统命令执行的漏洞,不信的话现在就可以找你们运维部的系统测试一下,会有意想不到的&quot;收获&quot;-_- 
+
+远程代码执行
+
+同样的道理,因为需求设计,后台有时候也会把用户的输入作为代码的一部分进行执行,也就造成了远程代码执行漏洞。 不管是使用了代码执行的函数,还是使用了不安全的反序列化等等。 因此，如果需要给前端用户提供操作类的API接口，一定需要对接口输入的内容进行严格的判断，比如实施严格的白名单策略会是一个比较好的方法。 你可以通过“RCE”对应的测试栏目，来进一步的了解该漏洞。 
+</code></pre>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.输入ip地址试试</p>
+<pre><code>127.0.0.1
+</code></pre>
+<p>虽然有乱码但不影响观看</p>
+<p>2.在ip地址后面用&amp;接ipconfig</p>
+<pre><code>127.0.0.1 &amp; ipconfig
+</code></pre>
+<p>可以看到不仅ping了ip还执行了ipconfig</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220323150335.png" alt="20220323150335"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RCE-exec-ping"><span class="toc-number">1.</span> <span class="toc-text">RCE exec-ping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RCE-remote-command-x2F-code-execute-%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4-x2F-%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">RCE(remote command&#x2F;code execute)远程命令&#x2F;代码执行概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

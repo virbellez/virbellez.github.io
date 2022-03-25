@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SQL-Inject宽字节注入 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="SQL-Inject宽字节注入概念解释什么是宽字节注入
+当后端对用户的输入做了转义时，比如利用addslashes()或mysql_escape_string()函数。此时输入id&amp;#x3D;1’其,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SQL-Inject宽字节注入 - Hexo"/>
+    <meta name="twitter:description" content="SQL-Inject宽字节注入概念解释什么是宽字节注入
+当后端对用户的输入做了转义时，比如利用addslashes()或mysql_escape_string()函数。此时输入id&amp;#x3D;1’其,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SQL-Inject宽字节注入 - Hexo"/>
+    <meta property="og:description" content="SQL-Inject宽字节注入概念解释什么是宽字节注入
+当后端对用户的输入做了转义时，比如利用addslashes()或mysql_escape_string()函数。此时输入id&amp;#x3D;1’其,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SQL-Inject宽字节注入</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SQL-Inject宽字节注入</h1>
+        <div class="stuff">
+            <span>三月 21, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="SQL-Inject宽字节注入"><a href="#SQL-Inject宽字节注入" class="headerlink" title="SQL-Inject宽字节注入"></a>SQL-Inject宽字节注入</h1><h2 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h2><p>什么是宽字节注入</p>
+<p>当后端对用户的输入做了转义时，比如利用addslashes()或mysql_escape_string()函数。此时输入id&#x3D;1’其中的单引号会被转义而变成id&#x3D;1&#39;，这样就使得单引号无法闭合数据库中的语句，一般情况下是很难绕过的。但是有两种情况可以通过宽字节注入绕过。</p>
+<p>第一中情况是当数据库的编码为GBK时，注入格式为id&#x3D;1%df’，因为反斜杠\的编码为%5c，所以参数传到后端经过转义后就会变成id&#x3D;1%df%5c’，其中GBK会将%df%5c编码成一个繁体字，这样反斜杠就失去了转义的效果，使得单引号逃逸出来闭合了语句。第二种情况是，若后端的代码中有转换字符编码的函数，道理其实一样，就是将用户输入的参数用宽字节去解释了，从而使单引号逃逸。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.填入用户名抓包</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220323143751.png" alt="20220323143751"></p>
+<p>2.抓到数据</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220323143835.png" alt="20220323143835"></p>
+<p>3.用%df’ or 1&#x3D;1#改包</p>
+<pre><code>%df&#39; or 1=1#
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220323143923.png" alt="20220323143923"></p>
+<p>4.返回所有用户数据</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220323143935.png" alt="20220323143935"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Inject%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">SQL-Inject宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E8%A7%A3%E9%87%8A"><span class="toc-number">1.1.</span> <span class="toc-text">概念解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

