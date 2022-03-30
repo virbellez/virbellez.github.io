@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-unsafe fileupload-getimagesize - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="unsafe fileupload-getimagesize不安全的文件上传漏洞概述文件上传功能在web应用系统很常见，比如很多网站注册的时候需要上传头像、上传附件等等。当用户点击上传按钮后，后台会,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-unsafe fileupload-getimagesize - Hexo"/>
+    <meta name="twitter:description" content="unsafe fileupload-getimagesize不安全的文件上传漏洞概述文件上传功能在web应用系统很常见，比如很多网站注册的时候需要上传头像、上传附件等等。当用户点击上传按钮后，后台会,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-unsafe fileupload-getimagesize - Hexo"/>
+    <meta property="og:description" content="unsafe fileupload-getimagesize不安全的文件上传漏洞概述文件上传功能在web应用系统很常见，比如很多网站注册的时候需要上传头像、上传附件等等。当用户点击上传按钮后，后台会,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-unsafe fileupload-getimagesize</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-unsafe fileupload-getimagesize</h1>
+        <div class="stuff">
+            <span>三月 30, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="unsafe-fileupload-getimagesize"><a href="#unsafe-fileupload-getimagesize" class="headerlink" title="unsafe fileupload-getimagesize"></a>unsafe fileupload-getimagesize</h1><h2 id="不安全的文件上传漏洞概述"><a href="#不安全的文件上传漏洞概述" class="headerlink" title="不安全的文件上传漏洞概述"></a>不安全的文件上传漏洞概述</h2><p>文件上传功能在web应用系统很常见，比如很多网站注册的时候需要上传头像、上传附件等等。当用户点击上传按钮后，后台会对上传的文件进行判断 比如是否是指定的类型、后缀名、大小等等，然后将其按照设计的格式进行重命名后存储在指定的目录。 如果说后台对上传的文件没有进行任何的安全判断或者判断条件不够严谨，则攻击着可能会上传一些恶意的文件，比如一句话木马，从而导致后台服务器被webshell。 </p>
+<p>在设计文件上传功能时，一定要对传进来的文件进行严格的安全考虑。比如：</p>
+<p>–验证文件类型、后缀名、大小;</p>
+<p>–验证文件的上传方式;</p>
+<p>–对文件进行一定复杂的重命名;</p>
+<p>–不要暴露文件上传后的路径;</p>
+<h2 id="文件上传漏洞测试方法"><a href="#文件上传漏洞测试方法" class="headerlink" title="文件上传漏洞测试方法"></a>文件上传漏洞测试方法</h2><p>1.对文件上传的地方按照要求上传文件，查看返回结果（路径、提示等）</p>
+<p>2.尝试上传不同类型的恶意文件，比如XXX.php文件，分析结果</p>
+<p>3.查看html源码，看看是否通过js在前端做了上传限制，能否绕过</p>
+<p>4.尝试使用不同方式绕过，黑白名单绕过、MIME类型绕过、目录0x00截断绕过等</p>
+<p>5.猜测或者结合其他漏洞（比如敏感信息泄露等）得到木马路径，连接测试；</p>
+<h2 id="getimagesize概述"><a href="#getimagesize概述" class="headerlink" title="getimagesize概述"></a>getimagesize概述</h2><p>getimagesize（）函数会对图片得16进制数进行审查，读取头几个字符串是否符合要求，getimagesize（）返回结果中有文件大小和类型，如果用这个函数来获取类型，从而判断是否是图片，会存在问题，因为图片头可以被伪造。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.制作含木马的php文件</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145710.png" alt="20220330145710"></p>
+<p>2.上传php文件试试，显示只能上传jpg,jpeg,png</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330140027.png" alt="20220330140027"></p>
+<p>3.直接把php文件后缀名改为jpg点击上传，会显示上传的是个假图片</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330140306.png" alt="20220330140306"></p>
+<p>4-1.制作带木马的图片方法一，找一张正常图片</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330140613.png" alt="20220330140613"></p>
+<p>在命令行将jpg文件和php文件合并为新的jpg文件</p>
+<pre><code>copy /b 123.jpg + hack.php back.jpg
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145350.png" alt="20220330145350"></p>
+<p>4-2.制作带木马图片方法二，在文件内容前加上GIF89a</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330154229.png" alt="20220330154229"></p>
+<p>将文件后缀名改为图片格式如jpg</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330154346.png" alt="20220330154346"></p>
+<p>上传成功</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330154334.png" alt="20220330154334"></p>
+<p>5.再次尝试上传</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145421.png" alt="20220330145421"></p>
+<p>6.上传成功</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145444.png" alt="20220330145444"></p>
+<p>7.返回路径</p>
+<p>uploads&#x2F;2022&#x2F;03&#x2F;30&#x2F;2209786243fea5b5392359149052.jpg</p>
+<p>8.因为被攻击靶场后台在本机，可以到本机后台去找到上传的夹带木马的图片</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145606.png" alt="20220330145606"></p>
+<p>9.把回显的路径填入url中可以查看到图片</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330145955.png" alt="20220330145955"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330150009.png" alt="20220330150009"></p>
+<p>10.可以看到图片，但是里面的木马并无法执行，不能像之前那样直接用蚁剑连接进去</p>
+<p>unsafeupload&#x2F;uploads&#x2F;2022&#x2F;03&#x2F;30&#x2F;2209786243fea5b5392359149052.jpg</p>
+<p>11.需要结合文件包含漏洞一起使用才能成功拿到shell,结合之前做过的本地文件包含漏洞，找到靶场，选择任意图片后，在filaname&#x3D;后面填入传入木马图片的地址，这里以4-2传入的为例，直接填入报错，可能不在一个目录，加..&#x2F;试试加到两个的时候成功了(注意直接复制网页返回的路径是反斜杠会出错)</p>
+<pre><code>../../unsafeupload/uploads/2022/03/30/5259536244094ab6c75927030177.jpg
+</code></pre>
+<p>12.读取了图片木马</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330160931.png" alt="20220330160931"></p>
+<p>13.这个时候直接上蚁剑，添加现在这个地址栏地址</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/pikachu/vul/fileinclude/fi_local.php?filename=../../unsafeupload/uploads/2022/03/30/5259536244094ab6c75927030177.jpg&amp;submit=%E6%8F%90%E4%BA%A4%E6%9F%A5%E8%AF%A2">http://127.0.0.1/pikachu/vul/fileinclude/fi_local.php?filename=../../unsafeupload/uploads/2022/03/30/5259536244094ab6c75927030177.jpg&amp;submit=%E6%8F%90%E4%BA%A4%E6%9F%A5%E8%AF%A2</a></p>
+<p>密码是一句话木马里面设置的hack</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330161103.png" alt="20220330161103"></p>
+<p>14.成功连接进去</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220330161141.png" alt="20220330161141"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#unsafe-fileupload-getimagesize"><span class="toc-number">1.</span> <span class="toc-text">unsafe fileupload-getimagesize</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">不安全的文件上传漏洞概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">文件上传漏洞测试方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getimagesize%E6%A6%82%E8%BF%B0"><span class="toc-number">1.3.</span> <span class="toc-text">getimagesize概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
