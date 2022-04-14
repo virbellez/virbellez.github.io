@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SSRF(curl) - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="pikachu解题漏洞报告-SSRF(curl)参考链接https://www.cnblogs.com/pursue-security/p/15348110.html
+概念描述SSRF(Server,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SSRF(curl) - Hexo"/>
+    <meta name="twitter:description" content="pikachu解题漏洞报告-SSRF(curl)参考链接https://www.cnblogs.com/pursue-security/p/15348110.html
+概念描述SSRF(Server,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SSRF(curl) - Hexo"/>
+    <meta property="og:description" content="pikachu解题漏洞报告-SSRF(curl)参考链接https://www.cnblogs.com/pursue-security/p/15348110.html
+概念描述SSRF(Server,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SSRF(curl)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SSRF(curl)</h1>
+        <div class="stuff">
+            <span>四月 05, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="pikachu解题漏洞报告-SSRF-curl"><a href="#pikachu解题漏洞报告-SSRF-curl" class="headerlink" title="pikachu解题漏洞报告-SSRF(curl)"></a>pikachu解题漏洞报告-SSRF(curl)</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/pursue-security/p/15348110.html">https://www.cnblogs.com/pursue-security/p/15348110.html</a></p>
+<h2 id="概念描述"><a href="#概念描述" class="headerlink" title="概念描述"></a>概念描述</h2><p>SSRF(Server-Side Request Forgery:服务器端请求伪造)</p>
+<p>SSRF就是让服务器去请求你指定的地址</p>
+<p>其形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能,但又没有对目标地址做严格过滤与限制，导致攻击者可以传入任意的地址来让后端服务器对其发起请求,并返回对该目标地址请求的数据</p>
+<p>数据流:攻击者—–&gt;服务器—-&gt;目标地址</p>
+<p>根据后台使用的函数的不同,对应的影响和利用方法又有不一样</p>
+<p>PHP中下面函数的使用不当会导致SSRF:</p>
+<pre><code>file_get_contents()
+
+fsockopen()
+
+curl_exec()
+</code></pre>
+<p>如果一定要通过后台服务器远程去对用户指定(“或者预埋在前端的请求”)的地址进行资源请求,则请做好目标地址的过滤。</p>
+<h2 id="漏洞成因分析"><a href="#漏洞成因分析" class="headerlink" title="漏洞成因分析"></a>漏洞成因分析</h2><p>因为靶场在本地，可以根据后台源代码分析漏洞成因</p>
+<p>&#x2F;&#x2F;payload:</p>
+<p>&#x2F;&#x2F;file:&#x2F;&#x2F;&#x2F;etc&#x2F;passwd  读取文件</p>
+<p>&#x2F;&#x2F;<a target="_blank" rel="noopener" href="http://192.168.1.15:22/">http://192.168.1.15:22</a> 根据banner返回,错误提示,时间延迟扫描端口</p>
+<p>if(isset($_GET[‘url’]) &amp;&amp; $_GET[‘url’] !&#x3D; null){</p>
+<pre><code>//接收前端URL没问题,但是要做好过滤,如果不做过滤,就会导致SSRF
+
+$URL = $_GET[&#39;url&#39;];
+
+$CH = curl_init($URL);    //创建新的cURL资源
+
+curl_setopt($CH, CURLOPT_HEADER, FALSE);    //设置URL和相应的选项
+
+curl_setopt($CH, CURLOPT_SSL_VERIFYPEER, FALSE);    
+
+$RES = curl_exec($CH);    //抓取URL，并把它传给浏览器
+
+curl_close($CH) ;    //关闭cURL资源，并且释放系统资源
+</code></pre>
+<p>&#x2F;&#x2F;ssrf的问是:前端传进来的url被后台使用curl_exec()进行了请求,然后将请求的结果又返回给了前端。</p>
+<p>&#x2F;&#x2F;除了http&#x2F;https外,curl还支持一些其他的协议curl –version 可以查看其支持的协议,telnet</p>
+<p>&#x2F;&#x2F;curl支持很多协议，有FTP, FTPS, HTTP, HTTPS, GOPHER, TELNET, DICT, FILE以及LDAP echo $RES;</p>
+<p>}</p>
+<p>服务器没有对传进来的URL参数进行过滤，并且把服务器请求的结果输出到了前端。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.点击链接，观察地址栏url，发现他传了一个url给后台</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407150652.png" alt="20220407150652"></p>
+<p>2.测试一下是否能随意从前端传入url，在自己电脑创建一个test.txt文件，内容随便写</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407150502.png" alt="20220407150502"></p>
+<p>3.在url&#x3D;后面加上本地test文件地址file:&#x2F;&#x2F;C:&#x2F;Users&#x2F;fantasy&#x2F;Desktop&#x2F;test.txt，成功访问，说明确实可以任意传入url</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407150357.png" alt="20220407150357"></p>
+<p>远程的也可以，例如用<a target="_blank" rel="noopener" href="https://www.baidu.com/%E6%B5%8B%E8%AF%95">https://www.baidu.com/测试</a></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407155427.png" alt="20220407155427"></p>
+<p>4.替换url，利用url读取php文件</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408133937.png" alt="20220408133937"></p>
+<pre><code>file:///C:/Users/fantasy/Desktop/test1.php
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408134101.png" alt="20220408134101"></p>
+<p>5.下面这个测试，php文件中的内容不能成功打印，是因为被过滤机制过滤了</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408131650.png" alt="20220408131650"></p>
+<pre><code>&lt;?php
+    echo &quot;test&quot;;
+?&gt;
+</code></pre>
+<p>file:&#x2F;&#x2F;&#x2F;C:&#x2F;Users&#x2F;fantasy&#x2F;Desktop&#x2F;test.php</p>
+<p>5.1查看代码可以发现是被过滤了，被加上了注释所以不能执行。</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407152126.png" alt="20220407152126"></p>
+<p>6.爆破存活的主机。打开burp，刷新网页页面，将burp拦截到的数据右键发送到测试器Intruder</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407160239.png" alt="20220407160239"></p>
+<p>7.在位置选项卡positions处选择攻击类型狙击手</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407160344.png" alt="20220407160344"></p>
+<p>8.在有效载荷payloads选项卡处设置载荷类型为数值，范围0-255，增量1，点击开始攻击</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408135515.png" alt="20220408135515"></p>
+<p>9.我这里没有爆破出来，应该是因为我靶场搭在我本地， 并没有端口开放</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pikachu%E8%A7%A3%E9%A2%98%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-SSRF-curl"><span class="toc-number">1.</span> <span class="toc-text">pikachu解题漏洞报告-SSRF(curl)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.1.</span> <span class="toc-text">参考链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">概念描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">漏洞成因分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

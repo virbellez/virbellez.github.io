@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-SSRF(file_get_content) - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="pikachu解题漏洞报告-SSRF(file_get_content)概念描述SSRF(Server-Side Request Forgery:服务器端请求伪造)
+其形成的原因大都是由于服务端提供,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-SSRF(file_get_content) - Hexo"/>
+    <meta name="twitter:description" content="pikachu解题漏洞报告-SSRF(file_get_content)概念描述SSRF(Server-Side Request Forgery:服务器端请求伪造)
+其形成的原因大都是由于服务端提供,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-SSRF(file_get_content) - Hexo"/>
+    <meta property="og:description" content="pikachu解题漏洞报告-SSRF(file_get_content)概念描述SSRF(Server-Side Request Forgery:服务器端请求伪造)
+其形成的原因大都是由于服务端提供,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-SSRF(file_get_content)</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-SSRF(file_get_content)</h1>
+        <div class="stuff">
+            <span>四月 06, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="pikachu解题漏洞报告-SSRF-file-get-content"><a href="#pikachu解题漏洞报告-SSRF-file-get-content" class="headerlink" title="pikachu解题漏洞报告-SSRF(file_get_content)"></a>pikachu解题漏洞报告-SSRF(file_get_content)</h1><h2 id="概念描述"><a href="#概念描述" class="headerlink" title="概念描述"></a>概念描述</h2><p>SSRF(Server-Side Request Forgery:服务器端请求伪造)</p>
+<p>其形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能,但又没有对目标地址做严格过滤与限制，导致攻击者可以传入任意的地址来让后端服务器对其发起请求,并返回对该目标地址请求的数据</p>
+<p>数据流:攻击者—–&gt;服务器—-&gt;目标地址</p>
+<p>根据后台使用的函数的不同,对应的影响和利用方法又有不一样</p>
+<p>PHP中下面函数的使用不当会导致SSRF:</p>
+<pre><code>file_get_contents()
+
+fsockopen()
+
+curl_exec()
+</code></pre>
+<p>如果一定要通过后台服务器远程去对用户指定(“或者预埋在前端的请求”)的地址进行资源请求,则请做好目标地址的过滤。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>file_get_content（）函数的功能是对本地和远程的文件进行读取</p>
+<p>1.因为靶场搭载本地，可以本地看到服务器源代码内容，先看源代码，这里我们看到可以读取一个文件，如果是本地的直接加路径，远程的需要加入域名。</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407163819.png" alt="20220407163819"></p>
+<p>2.点击首页的链接，观察url</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407164011.png" alt="20220407164011"></p>
+<p>3.在自己电脑创建一个test.txt文件，放在自己方便的路径，内容随便写，测试能否访问</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407164339.png" alt="20220407164339"></p>
+<p>4.替换网页url为text.txt的文件路径测试访问test.txt,</p>
+<p>127.0.0.1&#x2F;pikachu&#x2F;vul&#x2F;ssrf&#x2F;ssrf_fgc.php?file&#x3D;file:&#x2F;&#x2F;C:\Users\fantasy\Desktop&#x2F;test.txt</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407164616.png" alt="20220407164616"></p>
+<p>5.读取到文件内容，成功访问</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407164703.png" alt="20220407164703"></p>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/paidx0/p/14418451.html">https://www.cnblogs.com/paidx0/p/14418451.html</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pikachu%E8%A7%A3%E9%A2%98%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-SSRF-file-get-content"><span class="toc-number">1.</span> <span class="toc-text">pikachu解题漏洞报告-SSRF(file_get_content)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概念描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

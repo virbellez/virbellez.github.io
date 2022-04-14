@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告over permission -垂直越权 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="pikachu解题漏洞报告over permission -垂直越权越权概述越权漏洞属于逻辑漏洞，是由于权限校验的逻辑不够严谨导致的
+如果使用A用户的权限去操作B用户的数据，A的权限小于B的权限，如,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告over permission -垂直越权 - Hexo"/>
+    <meta name="twitter:description" content="pikachu解题漏洞报告over permission -垂直越权越权概述越权漏洞属于逻辑漏洞，是由于权限校验的逻辑不够严谨导致的
+如果使用A用户的权限去操作B用户的数据，A的权限小于B的权限，如,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告over permission -垂直越权 - Hexo"/>
+    <meta property="og:description" content="pikachu解题漏洞报告over permission -垂直越权越权概述越权漏洞属于逻辑漏洞，是由于权限校验的逻辑不够严谨导致的
+如果使用A用户的权限去操作B用户的数据，A的权限小于B的权限，如,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告over permission -垂直越权</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告over permission -垂直越权</h1>
+        <div class="stuff">
+            <span>三月 31, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="pikachu解题漏洞报告over-permission-垂直越权"><a href="#pikachu解题漏洞报告over-permission-垂直越权" class="headerlink" title="pikachu解题漏洞报告over permission -垂直越权"></a>pikachu解题漏洞报告over permission -垂直越权</h1><h2 id="越权概述"><a href="#越权概述" class="headerlink" title="越权概述"></a>越权概述</h2><p>越权漏洞属于逻辑漏洞，是由于权限校验的逻辑不够严谨导致的</p>
+<p>如果使用A用户的权限去操作B用户的数据，A的权限小于B的权限，如果能够成功操作，则称之为越权操作。 </p>
+<p>越权漏洞的形成原因是后台使用了不合理的权限校验规则。 </p>
+<p>一般越权漏洞容易出现在权限页面（需要登录的页面）增、删、改、查的的地方，当用户对权限页面内的信息进行这些操作时，后台需要对 对当前用户的权限进行校验，看其是否具备操作的权限，从而给出响应，而如果校验的规则过于简单则容易出现越权漏洞。 </p>
+<p>在权限管理中应该遵守：</p>
+<p>1.使用最小权限原则对用户进行赋权;</p>
+<p>2.使用合理（严格）的权限校验规则;</p>
+<p>3.使用后台登录态作为条件进行权限判断,别动不动就瞎用前端传进来的条件;</p>
+<h2 id="垂直越权"><a href="#垂直越权" class="headerlink" title="垂直越权"></a>垂直越权</h2><p>A用户权限高于B用户，B用户越权操作A用户的权限，称为垂直越权。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.点击提示，看到有两个账户，一个是普通账号一个是管理账号，用管理员账号登录</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151625.png" alt="20220331151625"></p>
+<p>2.看到有用户查看和添加的功能，添加一个新用户</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151713.png" alt="20220331151713"></p>
+<p>3.添加一个新用户</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151754.png" alt="20220331151754"></p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151816.png" alt="20220331151816"></p>
+<p>4.再添加一个test2的，填写信息，打开burp数据拦截，点击创建，看到burp截获数据</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151955.png" alt="20220331151955"></p>
+<p>5.右键发送到重发器，目的是把截获的数据保存下来，待会关闭拦截时这个界面数据就消失了</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331154545.png" alt="20220331154545"></p>
+<p>5.废包后关闭拦截，退出登录，再用普通账号登录</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331151101.png" alt="20220331151101"></p>
+<p>6.刷新页面进行截包</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331152346.png" alt="20220331152346"></p>
+<p>7.截获数据</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331154941.png" alt="20220331154941"></p>
+<p>8.获得普通用户登录的cookie，将其替换入刚才保存在重发器的数据cookie中，添加的用户信息也可以改成自己想要的</p>
+<pre><code>mr9sj9cvtbg87e2635gfuenbqh
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331155156.png" alt="20220331155156"></p>
+<p>9.点击发送，关闭拦截刷新页面后发现新用户已经添加进去了。成功越权</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220331155306.png" alt="20220331155306"></p>
+<p>10.后台没有判断数据包中用户的权限，但是这个很鸡肋，因为一般也很难抓到管理员的包。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pikachu%E8%A7%A3%E9%A2%98%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8Aover-permission-%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83"><span class="toc-number">1.</span> <span class="toc-text">pikachu解题漏洞报告over permission -垂直越权</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">越权概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%82%E7%9B%B4%E8%B6%8A%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">垂直越权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

